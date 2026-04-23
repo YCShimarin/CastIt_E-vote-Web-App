@@ -1,0 +1,44 @@
+[
+  {
+    "id": "kandidat_1",
+    "nama": "Dr. Ir. H. M. Jusuf Kalla",
+    "deskripsi": "Alumni Teknik Mesin Angkatan 1980. Pengalaman luas di bidang industri dan pemerintahan nasional.",
+    "foto": "assets/img/candidate1.JPG",
+    "visi": "Mewujudkan KATUA Unand sebagai organisasi alumni teknik yang modern, berdampak, dan menjadi kebanggaan Sumatera Barat.",
+    "misi": [
+      "Membangun sistem database alumni yang terintegrasi dan digital.",
+      "Memperkuat hubungan alumni dengan Fakultas Teknik Unand.",
+      "Membuka peluang kerja dan magang bagi alumni muda.",
+      "Mendorong alumni untuk aktif berkontribusi dalam pembangunan daerah.",
+      "Mengadakan program beasiswa dan mentoring bagi mahasiswa aktif."
+    ]
+  },
+  {
+    "id": "kandidat_2",
+    "nama": "Ir. Hj. Mulyani Sembiring",
+    "deskripsi": "Alumni Teknik Sipil 1985. Sosok inklusif dengan pengalaman panjang di dunia konstruksi dan birokrasi.",
+    "foto": "assets/img/candidate2.JPG",
+    "visi": "Sinergi alumni lintas generasi untuk kontribusi nyata bagi almamater, masyarakat, dan bangsa Indonesia.",
+    "misi": [
+      "Membangun forum komunikasi alumni yang aktif di setiap korda wilayah.",
+      "Meningkatkan keterlibatan alumni perempuan dalam kepemimpinan.",
+      "Menjembatani alumni dengan peluang bisnis dan investasi lokal.",
+      "Mendukung program penelitian dan pengembangan Fakultas Teknik.",
+      "Menguatkan identitas KATUA di tingkat nasional."
+    ]
+  },
+  {
+    "id": "kandidat_3",
+    "nama": "Indra Satria, S.T., M.M.",
+    "deskripsi": "Alumni Teknik Industri 1995. Inovatif, progresif, dan berpengalaman di dunia startup dan teknologi.",
+    "foto": "assets/img/candidate3.JPG",
+    "visi": "Transformasi digital dan kolaborasi lintas generasi alumni untuk Indonesia yang lebih maju dan berkelanjutan.",
+    "misi": [
+      "Membangun platform digital KATUA berbasis aplikasi mobile.",
+      "Menginisiasi program kewirausahaan alumni berbasis teknologi.",
+      "Membentuk inkubator bisnis bagi alumni muda yang inovatif.",
+      "Meningkatkan kehadiran KATUA di media sosial dan ruang publik.",
+      "Membangun kerjasama dengan perusahaan teknologi nasional."
+    ]
+  }
+]

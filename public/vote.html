@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Voting | KATUA Unand</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <nav>
+        <div class="container nav-content">
+            <a href="index.html" class="logo"><img src="assets/img/logos.png" alt="KATUA Unand"
+                    style="height:30px;width:auto;vertical-align:middle;"> KATUA Unand</a>
+            <div class="nav-links">
+                <span id="user-greeting" style="font-weight: 500; color: var(--text-dark);"></span>
+                <button class="btn btn-primary" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 48px; padding-bottom: 80px;">
+
+        <!-- PAGE HEADER -->
+        <div style="margin-bottom: 40px;">
+            <h1 style="margin-bottom: 6px;">Dashboard Pemilihan</h1>
+            <p style="color: var(--text-muted);">Klik kartu kandidat untuk melihat visi &amp; misi. Anda hanya dapat
+                memilih satu kali.</p>
+        </div>
+
+        <!-- ADMIN ONLY CONTROLS -->
+        <div id="admin-controls"
+            style="display:none; background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 16px; padding: 24px; margin-bottom: 36px;">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                <div>
+                    <h3 style="margin: 0; font-size: 1.1rem; color: #1e293b;">🛠️ Admin Control Panel</h3>
+                    <p style="margin: 5px 0 0; font-size: 0.85rem; color: #64748b;">Gunakan tombol di samping untuk
+                        membuka/menutup akses voting bagi semua peserta.</p>
+                </div>
+                <button id="admin-toggle-btn" class="btn"
+                    style="min-width: 180px; justify-content: center; font-weight: 600;">
+                    <i class="fas fa-power-off"></i> Memuat...
+                </button>
+            </div>
+        </div>
+
+        <!-- VOTED BANNER -->
+        <div id="voted-banner"
+            style="display:none; background: var(--primary-light); border: 1.5px solid var(--primary); border-radius: 14px; padding: 16px 24px; margin-bottom: 20px; align-items: center; gap: 12px;">
+            <i class="fas fa-check-circle" style="color: var(--primary); font-size: 1.5rem;"></i>
+            <div>
+                <strong style="color: var(--primary-dark);">Suara Anda Telah Diterima!</strong>
+                <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0;">Terima kasih telah berpartisipasi
+                    dalam pemilihan Ketua KATUA Unand 2026.</p>
+            </div>
+        </div>
+
+        <!-- VOTING CLOSED BANNER -->
+        <div id="voting-closed-banner"
+            style="display:none; background: #fef3c7; border: 1.5px solid #f59e0b; border-radius: 14px; padding: 16px 24px; margin-bottom: 36px; align-items: center; gap: 12px;">
+            <i class="fas fa-clock" style="color: #d97706; font-size: 1.5rem;"></i>
+            <div>
+                <strong style="color: #92400e;">Voting Belum Dibuka</strong>
+                <p style="font-size: 0.875rem; color: #92400e; margin: 0;">Panitia belum membuka sesi voting. Silakan
+                    tunggu pengumuman selanjutnya.</p>
+            </div>
+        </div>
+
+        <h2 style="margin-bottom: 28px; font-size: 1.4rem;">🗳️ Daftar Kandidat</h2>
+        <div class="candidates-grid" id="candidates-container"></div>
+
+        <!-- DIVIDER -->
+        <hr style="margin: 60px 0; border: none; border-top: 1px solid #e5e7eb;">
+
+        <!-- STATS -->
+        <h2 style="margin-bottom: 28px; font-size: 1.4rem;">📊 Statistik Pemilihan</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-value" id="stat-total-users">—</span>
+                <span class="stat-label">Total Pemilih</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="stat-total-voted">—</span>
+                <span class="stat-label">Sudah Voting</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="stat-not-voted">—</span>
+                <span class="stat-label">Belum Voting</span>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 48px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-weight: 600;">Progres Partisipasi</span>
+                <span id="ui-counter" style="color: var(--text-muted); font-size: 0.875rem;">0 / 0 telah voting
+                    (0%)</span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <!-- PIE CHART -->
+        <div class="chart-container">
+            <h3 style="text-align: center; margin-bottom: 6px; font-size: 1.1rem;">Perolehan Suara Sementara</h3>
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Data
+                diperbarui setiap kali ada vote masuk</p>
+            <canvas id="resultsChart"></canvas>
+        </div>
+    </div>
+
+    <!-- CANDIDATE MODAL -->
+    <div class="modal" id="candidate-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-modal-btn"><i class="fas fa-times"></i></button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p style="color: var(--text-muted); font-size: 0.875rem;">&copy; 2026 Keluarga Alumni Teknik Universitas
+                Andalas.</p>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) document.getElementById('user-greeting').textContent = `Halo, ${user.fullName} 👋`;
+    </script>
+    <script type="module" src="js/pages/vote.js"></script>
+</body>
+
+</html>

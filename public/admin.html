@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | KATUA Unand</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <style>
+        .toggle-btn {
+            width: 80px;
+            height: 40px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .toggle-btn.on { background: var(--primary); }
+        .toggle-btn.off { background: #d1d5db; }
+        .toggle-btn::after {
+            content: '';
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: white;
+            top: 4px;
+            transition: left 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .toggle-btn.on::after { left: 44px; }
+        .toggle-btn.off::after { left: 4px; }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #e2e8f0;
+            color: var(--text-dark);
+            margin-right: 8px;
+            margin-bottom: 8px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .audit-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.85rem;
+        }
+
+        .audit-time {
+            color: var(--text-muted);
+            min-width: 130px;
+            display: inline-block;
+        }
+        
+        .btn-sm-approve {
+            background: #16a34a;
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            border-radius: 8px;
+            margin-right: 4px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-sm-reject {
+            background: #ef4444;
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .pending-table { width: 100%; border-collapse: collapse; }
+        .pending-table th { background: #f8fafc; text-align: left; padding: 12px; font-size: 0.85rem; }
+        .pending-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="container nav-content">
+            <a href="index.html" class="logo"><img src="assets/img/logos.png" alt="KATUA Unand" style="height:36px;width:auto;vertical-align:middle;"> KATUA Unand</a>
+            <div class="nav-links">
+                <span style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;"><i class="fas fa-shield-halved"></i> Admin Panel</span>
+                <button class="btn btn-primary" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 48px; padding-bottom: 80px;">
+        <div style="margin-bottom: 40px;">
+            <h1 style="margin-bottom: 6px;">Panel Admin</h1>
+            <p style="color: var(--text-muted);">Kelola sesi voting, ekspor data, dan verifikasi pendaftar baru.</p>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div id="section-quick-actions" style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 30px;">
+            <h2 style="margin-bottom: 20px; font-size: 1rem; color: #64748b; text-transform: uppercase;">⚡ Quick Actions</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <button class="btn-outline" id="btn-export-excel"><i class="fas fa-chart-pie" style="color: #16a34a;"></i> Download Hasil Suara (Excel)</button>
+                <button class="btn-outline" id="btn-export-users"><i class="fas fa-users" style="color: var(--primary);"></i> Download Data Pemilih (Excel)</button>
+                <button class="btn-outline" id="btn-force-sync"><i class="fas fa-sync-alt" style="color: #3b82f6;"></i> Sync ulang dari File</button>
+                <button class="btn-outline" id="btn-reset-data" style="color: #ef4444; border-color: #fecaca;"><i class="fas fa-trash-alt"></i> Reset Semua Suara</button>
+            </div>
+        </div>
+
+        <!-- STATUS & STATS -->
+        <div id="section-voting-status" style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-bottom: 30px;">
+            <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
+                <h2 style="margin-bottom: 20px; font-size: 1.1rem;">🗳️ Status Voting</h2>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span id="voting-status-label" style="font-weight: 600;"></span>
+                    <button class="toggle-btn off" id="voting-toggle"></button>
+                </div>
+                <div id="toggle-feedback" style="margin-top: 15px; font-size: 0.8rem; color: var(--text-muted);"></div>
+            </div>
+
+            <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
+                <h2 style="margin-bottom: 20px; font-size: 1.1rem;">📊 Hasil Suara Sementara</h2>
+                <div id="standings-container">
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">Memuat perolehan suara...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS GRID -->
+        <div id="section-stats-grid" class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 30px;">
+            <div class="stat-card">
+                <span class="stat-value" id="stat-total">—</span>
+                <span class="stat-label">Total Pemilih</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="stat-voted">—</span>
+                <span class="stat-label">Sudah Voting</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="stat-pending">—</span>
+                <span class="stat-label">Pending Registrasi</span>
+            </div>
+        </div>
+
+        <!-- TABLES & LOGS -->
+        <div id="section-main-table" style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 30px; align-items: start;">
+            <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
+                <h2 style="font-size: 1.2rem; margin-bottom: 20px;">📋 Verifikasi Pendaftar Baru</h2>
+                <div id="pending-table-container">
+                    <p style="color: var(--text-muted);">Memuat data...</p>
+                </div>
+            </div>
+
+            <div id="section-audit-log" style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
+                <h2 style="font-size: 1.2rem; margin-bottom: 20px;">🛡️ Audit Log</h2>
+                <div id="audit-log-container" style="max-height: 400px; overflow-y: auto; border: 1px solid #f1f5f9; border-radius: 12px;">
+                    <p style="padding: 20px; color: var(--text-muted); text-align: center;">Belum ada aktivitas.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <script type="module" src="js/pages/admin.js"></script>
+</body>
+</html>

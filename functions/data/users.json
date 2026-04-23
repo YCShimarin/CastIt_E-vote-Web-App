@@ -1,0 +1,183 @@
+[
+  {
+    "id": 1,
+    "nama": "Fahmi",
+    "nim": "85171028",
+    "jurusan": "Teknik Mesin",
+    "email": "fahmibagindo3@gmail.com",
+    "username": "fahmi",
+    "password": "fahmi@85171028",
+    "has_voted": false,
+    "vote": null,
+    "voted_at": null
+  },
+  {
+    "id": 2,
+    "nama": "Andi",
+    "nim": "85171029",
+    "jurusan": "Teknik Elektro",
+    "email": "andi@example.com",
+    "username": "andi",
+    "password": "andi@85171029",
+    "has_voted": false,
+    "vote": null,
+    "voted_at": null
+  },
+  {
+    "id": 3,
+    "nama": "Siti",
+    "nim": "85171030",
+    "jurusan": "Teknik Sipil",
+    "email": "siti@example.com",
+    "username": "siti",
+    "password": "siti@85171030",
+    "has_voted": false,
+    "vote": null,
+    "voted_at": null
+  },
+  {
+    "id": 4,
+    "nama": "Dewi",
+    "nim": "85171031",
+    "jurusan": "Teknik Industri",
+    "email": "dewi@example.com",
+    "username": "dewi",
+    "password": "dewi@85171031",
+    "has_voted": false,
+    "vote": null,
+    "voted_at": null
+  },
+  {
+    "id": 5,
+    "nama": "Rizky",
+    "nim": "85171032",
+    "jurusan": "Teknik Lingkungan",
+    "email": "rizky@example.com",
+    "username": "rizky",
+    "password": "rizky@85171032",
+    "has_voted": false,
+    "vote": null,
+    "voted_at": null
+  },
+  {
+    "id": 6,
+    "nama": "Admin KATUA",
+    "nim": "-",
+    "jurusan": "-",
+    "email": "admin@katua.id",
+    "username": "admin",
+    "password": "LeMineralAdaManisManisnya",
+    "role": "admin",
+    "has_voted": false,
+    "vote": null,
+    "voted_at": null
+  },
+  {
+    "id": 7,
+    "nama": "Annisa cinta ramadhani",
+    "nim": "2110952011",
+    "username": "2110952011",
+    "password": "annisa@2110952011",
+    "email": "annisacinta@gmail.com",
+    "angkatan": "2021",
+    "jurusan": "Teknik Elektro",
+    "role": "user",
+    "has_voted": true,
+    "vote": "kandidat_3",
+    "voted_at": "2026-04-21T15:15:58.998Z"
+  },
+  {
+    "id": 8,
+    "nama": "Muhammad Reval",
+    "nim": "2110952001",
+    "username": "2110952001",
+    "password": "muhammad@2110952001",
+    "email": "muhammadrefal44@gmail.com",
+    "angkatan": "2021",
+    "jurusan": "Teknik Elektro",
+    "role": "user",
+    "has_voted": true,
+    "vote": "kandidat_2",
+    "voted_at": "2026-04-21T15:01:17.604Z"
+  },
+  {
+    "nama": "Bagus Sajiwo",
+    "nim": "2010952012",
+    "username": "2010952012",
+    "password": "bagus@2010952012",
+    "role": "user",
+    "has_voted": false,
+    "vote": null,
+    "voted_at": null
+  },
+  {
+    "username": "admin_elektro",
+    "password": "FourierTransform",
+    "role": "admin_verificator",
+    "jurusan": "Teknik Elektro",
+    "nama": "Verifikator Elektro"
+  },
+  {
+    "username": "admin_mesin",
+    "password": "FourierHeat",
+    "role": "admin_verificator",
+    "jurusan": "Teknik Mesin",
+    "nama": "Verifikator Mesin"
+  },
+  {
+    "username": "admin_sipil",
+    "password": "YoungModulus",
+    "role": "admin_verificator",
+    "jurusan": "Sipil",
+    "nama": "Verifikator Sipil"
+  },
+  {
+    "username": "admin_lingkungan",
+    "password": "DispersionAir",
+    "role": "admin_verificator",
+    "jurusan": "Lingkungan",
+    "nama": "Verifikator Lingkungan"
+  },
+  {
+    "username": "admin_industri",
+    "password": "SixSigma",
+    "role": "admin_verificator",
+    "jurusan": "Industri",
+    "nama": "Verifikator Industri"
+  },
+  {
+    "username": "admin_arsitektur",
+    "password": "GoldenRatio",
+    "role": "admin_verificator",
+    "jurusan": "Arsitektur",
+    "nama": "Verifikator Arsitektur"
+  },
+  {
+    "id": 9,
+    "nama": "Kevin Imam Satria",
+    "nim": "2110951001",
+    "username": "2110951001",
+    "password": "kevin@2110951001",
+    "email": "nndaiasidbiu@gmail.com",
+    "angkatan": "2012",
+    "jurusan": "Teknik Mesin",
+    "role": "user",
+    "has_voted": false,
+    "vote": null,
+    "voted_at": null
+  },
+  {
+    "id": 10,
+    "nama": "Yhunia Rosa",
+    "nim": "2010952012",
+    "username": "2010952012",
+    "password": "yhunia@a6ce14412d",
+    "email": "yhunia3@gmail.com",
+    "angkatan": "2020",
+    "jurusan": "Teknik Elektro",
+    "role": "user",
+    "has_voted": false,
+    "vote": null,
+    "voted_at": null
+  }
+]

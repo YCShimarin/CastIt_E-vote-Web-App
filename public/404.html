@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 – Halaman Tidak Ditemukan | KATUA Unand</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-404 {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 60%, #f0fdf4 100%);
+        }
+
+        .error-code {
+            font-size: 10rem;
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -4px;
+            animation: pulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(0.98); }
+        }
+
+        .error-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .error-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .error-desc {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 420px;
+            margin: 0 auto 36px;
+            line-height: 1.7;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary-light);
+        }
+        .btn-outline:hover {
+            background: var(--primary-light);
+        }
+
+        .error-footer {
+            margin-top: 60px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .error-footer a {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        .error-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Decorative circles */
+        .bg-circle {
+            position: fixed;
+            border-radius: 50%;
+            opacity: 0.08;
+            background: var(--primary);
+        }
+        .bg-circle-1 { width: 400px; height: 400px; top: -100px; right: -100px; }
+        .bg-circle-2 { width: 300px; height: 300px; bottom: -80px; left: -80px; }
+        .bg-circle-3 { width: 180px; height: 180px; top: 50%; left: 20%; }
+    </style>
+</head>
+<body>
+
+<!-- Background Decorations -->
+<div class="bg-circle bg-circle-1"></div>
+<div class="bg-circle bg-circle-2"></div>
+<div class="bg-circle bg-circle-3"></div>
+
+<div class="page-404">
+    <div class="error-icon">🔌</div>
+    <div class="error-code">404</div>
+
+    <h1 class="error-title">Halaman Tidak Ditemukan</h1>
+    <p class="error-desc">
+        Oops! Halaman yang Anda cari tidak ada atau sudah dipindahkan.
+        Mungkin link-nya salah, atau halaman ini sudah tidak tersedia.
+    </p>
+
+    <div class="error-actions">
+        <a href="index.html" class="btn btn-primary">
+            <i class="fas fa-home"></i> Kembali ke Beranda
+        </a>
+        <a href="vote.html" class="btn btn-outline">
+            <i class="fas fa-vote-yea"></i> Dashboard Voting
+        </a>
+    </div>
+
+    <div class="error-footer">
+        <p>Butuh bantuan? Hubungi kami di
+            <a href="https://www.instagram.com/dppkatua/" target="_blank">@dppkatua</a>
+        </p>
+        <p style="margin-top: 8px;">
+            <a href="index.html"><img src="assets/img/logos.png" alt="KATUA Unand" style="height:24px;vertical-align:middle;"> KATUA Unand</a>
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
