@@ -15,7 +15,7 @@ const db = {
 db.users.ensureIndex({ fieldName: 'username', unique: true });
 db.users.ensureIndex({ fieldName: 'nim', unique: false });
 
-const readUsers = async () => db.users.find({});
+const readUsers = async () => db.users.find({}).sort({ id: 1 });
 const writeUsers = async (data) => {
     // Note: In NeDB, we usually don't overwrite the whole collection like JSON.
     // This helper is for compatibility during migration or bulk ops.
@@ -23,7 +23,7 @@ const writeUsers = async (data) => {
     return db.users.insert(data);
 };
 
-const readCandidates = async () => db.candidates.find({});
+const readCandidates = async () => db.candidates.find({}).sort({ id: 1 });
 
 const readPending = async () => db.pending.find({});
 const writePending = async (data) => {
