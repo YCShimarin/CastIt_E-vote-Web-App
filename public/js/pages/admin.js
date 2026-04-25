@@ -13,7 +13,7 @@ const initAdminPage = async () => {
     // Role-based UI Adjustments
     if (user.role === 'admin_verificator') {
         // Hide restricted sections
-        const hideMe = ['section-quick-actions', 'section-voting-status', 'section-stats-grid', 'section-audit-log'];
+        const hideMe = ['section-quick-actions', 'section-voting-status', 'section-stats-grid', 'section-audit-log', 'section-user-management'];
         hideMe.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.style.display = 'none';
@@ -168,6 +168,143 @@ const initAdminPage = async () => {
         };
     }
 
+    // --- USER MANAGEMENT ---
+    let allUsers = [];
+    let filteredUsers = [];
+
+    const loadUserManagement = async () => {
+        if (user.role !== 'admin') return;
+        const res = await apiFetch('/admin/users?username=' + user.username);
+        if (res && res.success) {
+            allUsers = res.data.filter(u => u.role === 'user' || !u.role);
+            renderUserTable(allUsers);
+        }
+    };
+
+    const renderUserTable = (usersList) => {
+        const container = document.getElementById('user-list-container');
+        if (!container) return;
+
+        if (usersList.length === 0) {
+            container.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;">Tidak ada user ditemukan.</td></tr>';
+            return;
+        }
+
+        container.innerHTML = usersList.map(u => `
+            <tr>
+                <td><strong>${u.nama}</strong><br><span style="font-size:0.7rem;color:var(--text-muted);">${u.email || '-'}</span></td>
+                <td><code>${u.username}</code><br><span style="font-size:0.7rem;color:var(--text-muted);">NIM: ${u.nim}</span></td>
+                <td>${u.jurusan}<br><span style="font-size:0.7rem;color:var(--text-muted);">Angk. ${u.angkatan || '-'}</span></td>
+                <td>
+                    ${u.has_voted ? 
+                        '<span style="color:#16a34a; font-size:0.8rem; font-weight:600;"><i class="fas fa-check-circle"></i> SUDAH</span>' : 
+                        '<span style="color:#94a3b8; font-size:0.8rem;"><i class="fas fa-clock"></i> BELUM</span>'}
+                </td>
+                <td>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn" style="padding:5px 10px; background:#f1f5f9; color:var(--primary);" onclick="editUser('${u._id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn" style="padding:5px 10px; background:#fef2f2; color:#ef4444;" onclick="deleteUser('${u._id}')"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    };
+
+    // Search Logic
+    const searchInput = document.getElementById('user-search');
+    if (searchInput) {
+        searchInput.oninput = (e) => {
+            const val = e.target.value.toLowerCase();
+            filteredUsers = allUsers.filter(u => 
+                u.nama.toLowerCase().includes(val) || 
+                u.nim.toLowerCase().includes(val) || 
+                u.username.toLowerCase().includes(val)
+            );
+            renderUserTable(filteredUsers);
+        };
+    }
+
+    // Add User Modal
+    const userModal = document.getElementById('user-modal');
+    const userForm = document.getElementById('user-form');
+    const closeUserModal = document.getElementById('close-user-modal');
+    const addUserBtn = document.getElementById('btn-add-user');
+
+    if (addUserBtn) {
+        addUserBtn.onclick = () => {
+            document.getElementById('modal-user-title').textContent = 'Tambah User Baru';
+            userForm.reset();
+            document.getElementById('edit-user-id').value = '';
+            userModal.classList.add('open');
+        };
+    }
+
+    if (closeUserModal) {
+        closeUserModal.onclick = () => userModal.classList.remove('open');
+    }
+
+    window.editUser = (id) => {
+        const u = allUsers.find(x => x._id === id);
+        if (!u) return;
+
+        document.getElementById('modal-user-title').textContent = 'Edit Data User';
+        document.getElementById('edit-user-id').value = u._id;
+        document.getElementById('user-nama').value = u.nama;
+        document.getElementById('user-nim').value = u.nim;
+        document.getElementById('user-username').value = u.username;
+        document.getElementById('user-password').value = u.password;
+        document.getElementById('user-jurusan').value = u.jurusan;
+        document.getElementById('user-angkatan').value = u.angkatan || '';
+        document.getElementById('user-email').value = u.email || '';
+
+        userModal.classList.add('open');
+    };
+
+    window.deleteUser = async (id) => {
+        if (!confirm('Apakah Anda yakin ingin menghapus user ini?')) return;
+        const res = await apiFetch('/admin/action', {
+            method: 'POST',
+            body: JSON.stringify({ action: 'delete_user', username: user.username, targetId: id })
+        });
+        if (res && res.success) {
+            showToast('User berhasil dihapus');
+            loadUserManagement();
+        } else {
+            showToast(res.message || 'Gagal menghapus', 'error');
+        }
+    };
+
+    if (userForm) {
+        userForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const editId = document.getElementById('edit-user-id').value;
+            const action = editId ? 'update_user' : 'create_user';
+            
+            const userData = {
+                nama: document.getElementById('user-nama').value,
+                nim: document.getElementById('user-nim').value,
+                username: document.getElementById('user-username').value,
+                password: document.getElementById('user-password').value,
+                jurusan: document.getElementById('user-jurusan').value,
+                angkatan: document.getElementById('user-angkatan').value,
+                email: document.getElementById('user-email').value
+            };
+
+            const res = await apiFetch('/admin/action', {
+                method: 'POST',
+                body: JSON.stringify({ action, username: user.username, targetId: editId, userData })
+            });
+
+            if (res && res.success) {
+                showToast(res.message);
+                userModal.classList.remove('open');
+                loadUserManagement();
+            } else {
+                showToast(res.message || 'Gagal menyimpan data', 'error');
+            }
+        };
+    }
+
     // --- RENDER FUNCTIONS ---
 
     window.processReg = async (id, approve) => {
@@ -275,6 +412,7 @@ const initAdminPage = async () => {
     };
 
     loadAdminData();
+    loadUserManagement();
 };
 
 document.addEventListener('DOMContentLoaded', initAdminPage);

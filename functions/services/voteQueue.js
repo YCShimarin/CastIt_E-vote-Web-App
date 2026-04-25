@@ -1,10 +1,11 @@
 /**
- * voteQueue.js — Local JSON version
+ * voteQueue.js — NeDB Version
  * 
- * Queue-based voting processor to prevent race conditions in Localhost.
+ * Queue-based voting processor to prevent race conditions.
+ * Now using NeDB for persistence.
  */
 
-const { readUsers, writeUsers, readCandidates } = require('./dataService');
+const { db } = require('./dataService');
 
 let queue = [];
 let isProcessing = false;
@@ -38,23 +39,31 @@ const processQueue = async () => {
     const entry = queue.shift();
 
     try {
-        const users = await readUsers();
-        const userIndex = users.findIndex(u => u.username.toLowerCase() === entry.username.toLowerCase());
+        // Find user in NeDB
+        const user = await db.users.findOne({ username: new RegExp(`^${entry.username}$`, 'i') });
 
-        if (userIndex === -1) throw new Error('User not found');
-        if (users[userIndex].has_voted) throw new Error('Anda sudah memilih sebelumnya');
+        if (!user) throw new Error('User not found');
+        if (user.has_voted) throw new Error('Anda sudah memilih sebelumnya');
 
-        const candidates = await readCandidates();
-        if (!candidates.some(c => c.id === entry.pilihan)) throw new Error('Kandidat tidak valid');
+        const candidate = await db.candidates.findOne({ id: entry.pilihan });
+        if (!candidate) throw new Error('Kandidat tidak valid');
 
-        // Atomic update
-        users[userIndex].has_voted = true;
-        users[userIndex].vote = entry.pilihan;
-        users[userIndex].voted_at = new Date().toISOString();
+        // Atomic update in NeDB
+        await db.users.update(
+            { _id: user._id },
+            { 
+                $set: { 
+                    has_voted: true, 
+                    vote: entry.pilihan, 
+                    voted_at: new Date().toISOString() 
+                } 
+            }
+        );
 
-        await writeUsers(users);
+        console.log(`[Vote Success] ${entry.username} memilih ${entry.pilihan}`);
         entry.resolve({ username: entry.username, success: true });
     } catch (err) {
+        console.error(`[Vote Failed] ${entry.username}:`, err.message);
         entry.reject(err);
     } finally {
         isProcessing = false;

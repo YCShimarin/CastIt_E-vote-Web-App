@@ -193,6 +193,42 @@
             </div>
         </div>
 
+        <!-- USER MANAGEMENT SECTION (Only for Super Admin) -->
+        <div id="section-user-management"
+            style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                <h2 style="font-size: 1.2rem;">👥 Kelola Daftar Pemilih (Role: User)</h2>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <div style="position: relative;">
+                        <input type="text" id="user-search" placeholder="Cari Nama/NIM/Username..." 
+                            style="padding: 10px 15px 10px 35px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.9rem; width: 250px;">
+                        <i class="fas fa-search" style="position: absolute; left: 12px; top: 12px; color: #94a3b8;"></i>
+                    </div>
+                    <button class="btn btn-primary" id="btn-add-user" style="padding: 8px 16px; font-size: 0.85rem;">
+                        <i class="fas fa-plus"></i> Tambah User
+                    </button>
+                </div>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table class="pending-table" id="user-management-table">
+                    <thead>
+                        <tr>
+                            <th>Nama / Email</th>
+                            <th>NIM / Username</th>
+                            <th>Jurusan</th>
+                            <th>Status Vote</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-list-container">
+                        <tr><td colspan="5" style="text-align:center; padding: 30px; color: var(--text-muted);">Memuat data user...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="user-pagination" style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;"></div>
+        </div>
+
         <!-- TABLES & LOGS -->
         <div id="section-main-table"
             style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 30px; align-items: start;">
@@ -215,6 +251,60 @@
     </div>
 
     <div id="toast" class="toast"></div>
+
+    <!-- USER MODAL -->
+    <div class="modal" id="user-modal" style="z-index: 1001;">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="close-modal" id="close-user-modal"><i class="fas fa-times"></i></button>
+            <h2 id="modal-user-title" style="margin-bottom: 20px;">Tambah User</h2>
+            <form id="user-form">
+                <input type="hidden" id="edit-user-id">
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="user-nama" class="form-control" placeholder="Nama Lengkap" required>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>NIM</label>
+                        <input type="text" id="user-nim" class="form-control" placeholder="NIM" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="user-username" class="form-control" placeholder="Username" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="text" id="user-password" class="form-control" placeholder="Password" required>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Jurusan</label>
+                        <select id="user-jurusan" class="form-control" required>
+                            <option value="Teknik Elektro">Teknik Elektro</option>
+                            <option value="Teknik Mesin">Teknik Mesin</option>
+                            <option value="Sipil">Teknik Sipil</option>
+                            <option value="Lingkungan">Teknik Lingkungan</option>
+                            <option value="Industri">Teknik Industri</option>
+                            <option value="Arsitektur">Prodi Arsitektur</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Angkatan</label>
+                        <input type="number" id="user-angkatan" class="form-control" placeholder="2020">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="user-email" class="form-control" placeholder="email@contoh.com">
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;">Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script type="module" src="js/pages/admin.js"></script>
 </body>
 

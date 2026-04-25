@@ -179,6 +179,66 @@ const doAdminAction = async (req, res) => {
              return sendResponse(res, true, 'Sync complete');
         }
 
+        // --- NEW CRUD ACTIONS ---
+        
+        if (action === 'delete_user') {
+            if (admin.role !== 'admin') return sendResponse(res, false, 'Unauthorized', {}, 403);
+            const { targetId } = req.body;
+            const { db } = require('../services/dataService');
+            await db.users.remove({ _id: targetId });
+            return sendResponse(res, true, 'User berhasil dihapus');
+        }
+
+        if (action === 'update_user') {
+            if (admin.role !== 'admin') return sendResponse(res, false, 'Unauthorized', {}, 403);
+            const { targetId, userData } = req.body;
+            const { db } = require('../services/dataService');
+            
+            console.log(`[Admin] Updating user ${targetId}:`, userData);
+
+            // Prevent changing username to a duplicate
+            if (userData.username) {
+                const existing = await db.users.findOne({ 
+                    username: new RegExp(`^${userData.username}$`, 'i'),
+                    _id: { $ne: targetId }
+                });
+                if (existing) {
+                    console.warn(`[Admin] Update failed: Username ${userData.username} already exists`);
+                    return sendResponse(res, false, 'Username sudah digunakan oleh user lain', {}, 400);
+                }
+            }
+
+            const updated = await db.users.update({ _id: targetId }, { $set: userData });
+            console.log(`[Admin] Update successful. Docs affected: ${updated}`);
+            return sendResponse(res, true, 'Data user berhasil diperbarui');
+        }
+
+        if (action === 'create_user') {
+            if (admin.role !== 'admin') return sendResponse(res, false, 'Unauthorized', {}, 403);
+            const { userData } = req.body;
+            const { db } = require('../services/dataService');
+
+            console.log(`[Admin] Creating new user:`, userData);
+
+            const existing = await db.users.findOne({ username: new RegExp(`^${userData.username}$`, 'i') });
+            if (existing) {
+                console.warn(`[Admin] Create failed: Username ${userData.username} already exists`);
+                return sendResponse(res, false, 'Username sudah terdaftar', {}, 400);
+            }
+
+            const newUser = {
+                ...userData,
+                role: userData.role || 'user',
+                has_voted: false,
+                vote: null,
+                voted_at: null,
+                created_at: new Date().toISOString()
+            };
+            await db.users.insert(newUser);
+            console.log(`[Admin] User created successfully: ${userData.username}`);
+            return sendResponse(res, true, 'User berhasil ditambahkan');
+        }
+
         return sendResponse(res, false, 'Aksi tidak dikenal', {}, 400);
     } catch (error) {
         console.error('[Admin Action Error]', error);
