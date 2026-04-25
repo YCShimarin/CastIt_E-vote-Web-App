@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel | KATUA Unand</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="assets/img/logos.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <style>
@@ -19,8 +20,14 @@
             transition: background 0.3s;
         }
 
-        .toggle-btn.on { background: var(--primary); }
-        .toggle-btn.off { background: #d1d5db; }
+        .toggle-btn.on {
+            background: var(--primary);
+        }
+
+        .toggle-btn.off {
+            background: #d1d5db;
+        }
+
         .toggle-btn::after {
             content: '';
             position: absolute;
@@ -32,8 +39,14 @@
             transition: left 0.3s;
             box-shadow: var(--shadow);
         }
-        .toggle-btn.on::after { left: 44px; }
-        .toggle-btn.off::after { left: 4px; }
+
+        .toggle-btn.on::after {
+            left: 44px;
+        }
+
+        .toggle-btn.off::after {
+            left: 4px;
+        }
 
         .btn-outline {
             background: transparent;
@@ -64,7 +77,7 @@
             min-width: 130px;
             display: inline-block;
         }
-        
+
         .btn-sm-approve {
             background: #16a34a;
             color: white;
@@ -75,7 +88,7 @@
             border: none;
             cursor: pointer;
         }
-        
+
         .btn-sm-reject {
             background: #ef4444;
             color: white;
@@ -86,18 +99,35 @@
             cursor: pointer;
         }
 
-        .pending-table { width: 100%; border-collapse: collapse; }
-        .pending-table th { background: #f8fafc; text-align: left; padding: 12px; font-size: 0.85rem; }
-        .pending-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
+        .pending-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .pending-table th {
+            background: #f8fafc;
+            text-align: left;
+            padding: 12px;
+            font-size: 0.85rem;
+        }
+
+        .pending-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 
 <body>
     <nav>
         <div class="container nav-content">
-            <a href="index.html" class="logo"><img src="assets/img/logos.png" alt="KATUA Unand" style="height:36px;width:auto;vertical-align:middle;"> KATUA Unand</a>
+            <a href="index.html" class="logo"><img src="assets/img/logos.png" alt="KATUA Unand"
+                    style="height:36px;width:auto;vertical-align:middle;"> KATUA Unand</a>
             <div class="nav-links">
-                <span style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;"><i class="fas fa-shield-halved"></i> Admin Panel</span>
+                <span
+                    style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;"><i
+                        class="fas fa-shield-halved"></i> Admin Panel</span>
                 <button class="btn btn-primary" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </div>
@@ -110,18 +140,25 @@
         </div>
 
         <!-- QUICK ACTIONS -->
-        <div id="section-quick-actions" style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 30px;">
-            <h2 style="margin-bottom: 20px; font-size: 1rem; color: #64748b; text-transform: uppercase;">⚡ Quick Actions</h2>
+        <div id="section-quick-actions"
+            style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 30px;">
+            <h2 style="margin-bottom: 20px; font-size: 1rem; color: #64748b; text-transform: uppercase;">⚡ Quick Actions
+            </h2>
             <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                <button class="btn-outline" id="btn-export-excel"><i class="fas fa-chart-pie" style="color: #16a34a;"></i> Download Hasil Suara (Excel)</button>
-                <button class="btn-outline" id="btn-export-users"><i class="fas fa-users" style="color: var(--primary);"></i> Download Data Pemilih (Excel)</button>
-                <button class="btn-outline" id="btn-force-sync"><i class="fas fa-sync-alt" style="color: #3b82f6;"></i> Sync ulang dari File</button>
-                <button class="btn-outline" id="btn-reset-data" style="color: #ef4444; border-color: #fecaca;"><i class="fas fa-trash-alt"></i> Reset Semua Suara</button>
+                <button class="btn-outline" id="btn-export-excel"><i class="fas fa-chart-pie"
+                        style="color: #16a34a;"></i> Download Hasil Suara (Excel)</button>
+                <button class="btn-outline" id="btn-export-users"><i class="fas fa-users"
+                        style="color: var(--primary);"></i> Download Data Pemilih (Excel)</button>
+                <button class="btn-outline" id="btn-force-sync"><i class="fas fa-sync-alt" style="color: #3b82f6;"></i>
+                    Sync ulang dari File</button>
+                <button class="btn-outline" id="btn-reset-data" style="color: #ef4444; border-color: #fecaca;"><i
+                        class="fas fa-trash-alt"></i> Reset Semua Suara</button>
             </div>
         </div>
 
         <!-- STATUS & STATS -->
-        <div id="section-voting-status" style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-bottom: 30px;">
+        <div id="section-voting-status"
+            style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-bottom: 30px;">
             <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
                 <h2 style="margin-bottom: 20px; font-size: 1.1rem;">🗳️ Status Voting</h2>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -140,7 +177,8 @@
         </div>
 
         <!-- STATS GRID -->
-        <div id="section-stats-grid" class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 30px;">
+        <div id="section-stats-grid" class="stats-grid"
+            style="grid-template-columns: repeat(3, 1fr); margin-bottom: 30px;">
             <div class="stat-card">
                 <span class="stat-value" id="stat-total">—</span>
                 <span class="stat-label">Total Pemilih</span>
@@ -156,7 +194,8 @@
         </div>
 
         <!-- TABLES & LOGS -->
-        <div id="section-main-table" style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 30px; align-items: start;">
+        <div id="section-main-table"
+            style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 30px; align-items: start;">
             <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
                 <h2 style="font-size: 1.2rem; margin-bottom: 20px;">📋 Verifikasi Pendaftar Baru</h2>
                 <div id="pending-table-container">
@@ -164,9 +203,11 @@
                 </div>
             </div>
 
-            <div id="section-audit-log" style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
+            <div id="section-audit-log"
+                style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
                 <h2 style="font-size: 1.2rem; margin-bottom: 20px;">🛡️ Audit Log</h2>
-                <div id="audit-log-container" style="max-height: 400px; overflow-y: auto; border: 1px solid #f1f5f9; border-radius: 12px;">
+                <div id="audit-log-container"
+                    style="max-height: 400px; overflow-y: auto; border: 1px solid #f1f5f9; border-radius: 12px;">
                     <p style="padding: 20px; color: var(--text-muted); text-align: center;">Belum ada aktivitas.</p>
                 </div>
             </div>
@@ -176,4 +217,5 @@
     <div id="toast" class="toast"></div>
     <script type="module" src="js/pages/admin.js"></script>
 </body>
+
 </html>
