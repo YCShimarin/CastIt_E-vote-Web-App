@@ -727,3 +727,142 @@ footer {
     font-size: 0.875rem;
     color: var(--text-muted);
 }
+
+/* ── DARK MODE ───────────────────────────── */
+html.dark-mode {
+    --primary: #22c55e;
+    --primary-dark: #16a34a;
+    --primary-light: #064e3b;
+    --text-dark: #f3f4f6;
+    --text-muted: #9ca3af;
+    --white: #1f2937;
+    --bg-light: #111827;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 30px -5px rgb(0 0 0 / 0.6);
+}
+
+html.dark-mode nav {
+    background: var(--white);
+    box-shadow: 0 1px 0 #374151;
+}
+
+html.dark-mode .hero {
+    background: linear-gradient(135deg, #064e3b 0%, #111827 50%, #064e3b 100%);
+}
+
+html.dark-mode .stats-bar, 
+html.dark-mode .stats-bar-item {
+    background: var(--bg-light);
+    border-color: #374151;
+}
+
+html.dark-mode section#kandidat, 
+html.dark-mode section#helpdesk,
+html.dark-mode .candidate-info {
+    background: var(--bg-light) !important;
+}
+
+html.dark-mode .hero-panel, 
+html.dark-mode .hero-floating {
+    background: var(--white);
+}
+
+html.dark-mode .form-control {
+    background: #374151;
+    border-color: #4b5563;
+    color: var(--text-dark);
+}
+
+html.dark-mode .form-control:focus {
+    border-color: var(--primary);
+}
+
+html.dark-mode .modal-content,
+html.dark-mode .candidate-card,
+html.dark-mode .stat-card,
+html.dark-mode .feature-item,
+html.dark-mode .login-card,
+html.dark-mode .chart-container,
+html.dark-mode #section-quick-actions,
+html.dark-mode #section-voting-status > div,
+html.dark-mode #section-user-management,
+html.dark-mode #section-audit-log {
+    background: var(--white);
+    border-color: #374151;
+}
+
+html.dark-mode .close-modal {
+    background: #374151;
+    color: var(--text-dark);
+}
+
+html.dark-mode .close-modal:hover {
+    background: var(--primary-light);
+}
+
+html.dark-mode .misi-list li {
+    border-color: #374151;
+}
+
+html.dark-mode footer {
+    background: var(--bg-light);
+    border-color: #374151;
+}
+
+html.dark-mode .social-links a {
+    background: var(--white);
+}
+
+/* Specific to Admin/Vote Pages */
+html.dark-mode .pending-table th {
+    background: #374151;
+    color: var(--text-dark);
+}
+
+html.dark-mode .pending-table td,
+html.dark-mode .audit-item {
+    border-color: #374151;
+}
+
+html.dark-mode #admin-controls {
+    background: var(--white) !important;
+    border-color: #374151 !important;
+}
+
+html.dark-mode .btn-outline {
+    color: var(--text-dark);
+    border-color: #4b5563;
+}
+
+html.dark-mode .btn-outline:hover {
+    background: #374151;
+    border-color: #6b7280;
+}
+
+/* Dark Mode Toggle Button */
+.theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-dark);
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.theme-toggle:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+html.dark-mode .theme-toggle .fa-moon {
+    display: none;
+}
+
+html:not(.dark-mode) .theme-toggle .fa-sun {
+    display: none;
+}

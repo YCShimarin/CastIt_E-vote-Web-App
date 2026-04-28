@@ -9,6 +9,11 @@
     <link rel="icon" type="image/png" href="assets/img/logos.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark-mode');
+        }
+    </script>
 </head>
 
 <body>
@@ -136,6 +141,7 @@
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) document.getElementById('user-greeting').textContent = `Halo, ${user.fullName} 👋`;
     </script>
+    <script src="js/utils/darkMode.js"></script>
     <script type="module" src="js/pages/vote.js"></script>
 </body>
 

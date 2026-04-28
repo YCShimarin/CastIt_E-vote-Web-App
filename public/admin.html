@@ -9,6 +9,11 @@
     <link rel="icon" type="image/png" href="assets/img/logos.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script>
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark-mode');
+        }
+    </script>
     <style>
         .toggle-btn {
             width: 80px;
@@ -305,6 +310,7 @@
         </div>
     </div>
 
+    <script src="js/utils/darkMode.js"></script>
     <script type="module" src="js/pages/admin.js"></script>
 </body>
 
