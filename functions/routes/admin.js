@@ -1,6 +1,8 @@
-const { readSettings, writeSettings, readPending, writePending, readUsers, writeUsers, getUserByUsername } = require('../services/dataService');
+const { readSettings, writeSettings, readPending, writePending, readUsers, writeUsers, getUserByUsername, writeLog, readLogs } = require('../services/dataService');
 const { sendResponse } = require('../utils/responseHandler');
 const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
 
 /**
  * Helper to check admin role and jurusan
@@ -11,10 +13,6 @@ const getAdmin = async (username) => {
     if (!user) return null;
     if (user.role === 'admin' || user.role === 'admin_verificator') {
         return user;
-    }
-    // Backward compatibility for old admin
-    if (username.toLowerCase() === 'admin') {
-        return { username: 'admin', role: 'admin', nama: 'Super Admin' };
     }
     return null;
 };
@@ -62,7 +60,8 @@ const getStatus = async (req, res) => {
                 totalVoted,
                 notVoted: totalUsers - totalVoted,
                 progressPercentage: totalUsers === 0 ? 0 : Math.round((totalVoted / totalUsers) * 100)
-            }
+            },
+            logs: await readLogs()
         });
     } catch (error) {
         console.error('[Get Admin Status Error]', error);
@@ -87,6 +86,8 @@ const toggleVoting = async (req, res) => {
         settings.voting_open = typeof open === 'boolean' ? open : !settings.voting_open;
         await writeSettings(settings);
 
+        await writeLog(admin.username, `Changed voting status to: ${settings.voting_open ? 'OPEN' : 'CLOSED'}`);
+
         return sendResponse(res, true, `Voting sekarang: ${settings.voting_open ? 'DIBUKA' : 'DITUTUP'}`, {
             voting_open: settings.voting_open
         });
@@ -110,11 +111,11 @@ const doAdminAction = async (req, res) => {
         }
 
         if (action === 'process_registration') {
-            const pending = await readPending();
-            const idx = pending.findIndex(p => p.id === requestId);
-            if (idx === -1) return sendResponse(res, false, 'Registrasi tidak ditemukan', {}, 404);
-
-            const reqUser = pending[idx];
+            const { requestId, approve } = req.body;
+            const { db } = require('../services/dataService');
+            
+            const reqUser = await db.pending.findOne({ id: requestId });
+            if (!reqUser) return sendResponse(res, false, 'Registrasi tidak ditemukan', {}, 404);
 
             // Check department permission
             if (admin.role === 'admin_verificator' && admin.jurusan !== reqUser.jurusan) {
@@ -122,14 +123,11 @@ const doAdminAction = async (req, res) => {
             }
 
             // Remove from pending
-            pending.splice(idx, 1);
-            await writePending(pending);
+            await db.pending.remove({ id: requestId });
 
             if (approve) {
-                const users = await readUsers();
-
                 // Generate Password Aman: MD5(NIM + Secret) ambil sepanjang NIM
-                const secretSalt = "KATUA_VOTING_UNAND_2026"; // Kunci rahasia untuk enkripsi
+                const secretSalt = "ORGXYZ_VOTING_2026"; // Kunci rahasia untuk enkripsi
                 const nimHash = crypto.createHash('md5').update(reqUser.nim + secretSalt).digest('hex');
                 const passwordSuffix = nimHash.substring(0, reqUser.nim.length);
 
@@ -138,9 +136,10 @@ const doAdminAction = async (req, res) => {
                 const generatedPassword = `${firstName}@${passwordSuffix}`;
 
                 // Generate ID numerik (max + 1)
-                const nextId = users.length > 0 ? Math.max(...users.map(u => u.id || 0)) + 1 : 1;
+                const usersList = await db.users.find({}).sort({ id: -1 }).limit(1);
+                const nextId = usersList.length > 0 && usersList[0].id ? usersList[0].id + 1 : 1;
 
-                users.push({
+                const newUser = {
                     id: nextId,
                     nama: reqUser.nama,
                     nim: reqUser.nim,
@@ -153,8 +152,9 @@ const doAdminAction = async (req, res) => {
                     has_voted: false,
                     vote: null,
                     voted_at: null
-                });
-                await writeUsers(users);
+                };
+                await db.users.insert(newUser);
+                await writeLog(admin.username, `Approved registration for user ${reqUser.nama} (${reqUser.nim})`);
                 return sendResponse(res, true, `User ${reqUser.nama} telah disetujui.`, {
                     email: reqUser.email,
                     nama: reqUser.nama,
@@ -162,6 +162,7 @@ const doAdminAction = async (req, res) => {
                     password: generatedPassword
                 });
             }
+            await writeLog(admin.username, `Rejected registration for user ${reqUser.nama} (${reqUser.nim})`);
             return sendResponse(res, true, `Pendaftaran ${reqUser.nama} ditolak.`);
         }
 
@@ -170,6 +171,7 @@ const doAdminAction = async (req, res) => {
             const users = await readUsers();
             const resetUsers = users.map(u => ({ ...u, has_voted: false, vote: null, voted_at: null }));
             await writeUsers(resetUsers);
+            await writeLog(admin.username, `RESET all voting data`);
             return sendResponse(res, true, 'Database voting telah dikosongkan.');
         }
 
@@ -186,6 +188,7 @@ const doAdminAction = async (req, res) => {
             const { targetId } = req.body;
             const { db } = require('../services/dataService');
             await db.users.remove({ _id: targetId });
+            await writeLog(admin.username, `Deleted user with ID ${targetId}`);
             return sendResponse(res, true, 'User berhasil dihapus');
         }
 
@@ -199,17 +202,30 @@ const doAdminAction = async (req, res) => {
             // Prevent changing username to a duplicate
             if (userData.username) {
                 const existing = await db.users.findOne({ 
-                    username: new RegExp(`^${userData.username}$`, 'i'),
+                    $or: [
+                        { username: new RegExp(`^${userData.username}$`, 'i') },
+                        { nim: userData.nim },
+                        { email: userData.email && userData.email.trim() !== '' ? userData.email : null }
+                    ],
                     _id: { $ne: targetId }
                 });
+                
                 if (existing) {
-                    console.warn(`[Admin] Update failed: Username ${userData.username} already exists`);
-                    return sendResponse(res, false, 'Username sudah digunakan oleh user lain', {}, 400);
+                    if (existing.username.toLowerCase() === userData.username.toLowerCase()) {
+                        return sendResponse(res, false, 'Username sudah digunakan oleh user lain', {}, 400);
+                    }
+                    if (existing.nim === userData.nim) {
+                        return sendResponse(res, false, 'ID Number sudah digunakan oleh user lain', {}, 400);
+                    }
+                    if (existing.email === userData.email) {
+                        return sendResponse(res, false, 'Email sudah digunakan oleh user lain', {}, 400);
+                    }
                 }
             }
 
             const updated = await db.users.update({ _id: targetId }, { $set: userData });
             console.log(`[Admin] Update successful. Docs affected: ${updated}`);
+            await writeLog(admin.username, `Updated data for user ${userData.username}`);
             return sendResponse(res, true, 'Data user berhasil diperbarui');
         }
 
@@ -220,10 +236,24 @@ const doAdminAction = async (req, res) => {
 
             console.log(`[Admin] Creating new user:`, userData);
 
-            const existing = await db.users.findOne({ username: new RegExp(`^${userData.username}$`, 'i') });
+            const existing = await db.users.findOne({ 
+                $or: [
+                    { username: new RegExp(`^${userData.username}$`, 'i') },
+                    { nim: userData.nim },
+                    { email: userData.email && userData.email.trim() !== '' ? userData.email : null }
+                ]
+            });
+            
             if (existing) {
-                console.warn(`[Admin] Create failed: Username ${userData.username} already exists`);
-                return sendResponse(res, false, 'Username sudah terdaftar', {}, 400);
+                if (existing.username.toLowerCase() === userData.username.toLowerCase()) {
+                    return sendResponse(res, false, 'Username sudah terdaftar', {}, 400);
+                }
+                if (existing.nim === userData.nim) {
+                    return sendResponse(res, false, 'ID Number sudah terdaftar', {}, 400);
+                }
+                if (existing.email === userData.email) {
+                    return sendResponse(res, false, 'Email sudah terdaftar', {}, 400);
+                }
             }
 
             const newUser = {
@@ -236,7 +266,27 @@ const doAdminAction = async (req, res) => {
             };
             await db.users.insert(newUser);
             console.log(`[Admin] User created successfully: ${userData.username}`);
+            await writeLog(admin.username, `Added new user ${userData.username}`);
             return sendResponse(res, true, 'User berhasil ditambahkan');
+        }
+
+        if (action === 'save_config') {
+            if (admin.role !== 'admin') return sendResponse(res, false, 'Unauthorized', {}, 403);
+            const { configData } = req.body;
+            if (!configData) return sendResponse(res, false, 'Data konfigurasi kosong', {}, 400);
+
+            try {
+                // Ensure the root path exists
+                const rootConfigPath = path.join(__dirname, '../../web_config.json');
+                fs.writeFileSync(rootConfigPath, JSON.stringify(configData, null, 2));
+
+                await writeLog(admin.username, `Saved Web Config settings`);
+
+                return sendResponse(res, true, 'Konfigurasi web berhasil diperbarui');
+            } catch (err) {
+                console.error('Failed to write web config:', err);
+                return sendResponse(res, false, 'Gagal menyimpan konfigurasi', {}, 500);
+            }
         }
 
         return sendResponse(res, false, 'Aksi tidak dikenal', {}, 400);

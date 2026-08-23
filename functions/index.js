@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
-const { login } = require('./auth/login');
+const { login, logout, heartbeat } = require('./auth/login');
 const { vote } = require('./routes/vote');
 const { getResults } = require('./routes/results');
 const { submitHelpdesk } = require('./routes/helpdesk');
@@ -16,6 +16,20 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Secure config serving (hides admin credentials)
+app.get('/web_config.json', (req, res) => {
+    try {
+        const fs = require('fs');
+        const configPath = path.join(__dirname, '../web_config.json');
+        const configStr = fs.readFileSync(configPath, 'utf8');
+        const config = JSON.parse(configStr);
+        delete config.admin; // Remove sensitive data
+        res.json(config);
+    } catch (e) {
+        res.status(500).json({ error: 'Config not found' });
+    }
+});
+
 // Serve Static Files from the public folder
 app.use(express.static(path.join(__dirname, '../public')));
 
@@ -27,6 +41,8 @@ app.use((req, res, next) => {
 
 // Routes
 app.post('/auth/login', login);
+app.post('/auth/logout', logout);
+app.post('/auth/heartbeat', heartbeat);
 app.post('/vote', vote);
 app.get('/result', getResults);
 app.post('/helpdesk', submitHelpdesk);
@@ -51,7 +67,7 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log('=========================================');
-    console.log(`  KATUA VOTING SERVER IS RUNNING`);
+    console.log(`  VOTING SERVER IS RUNNING`);
     console.log(`  URL: http://localhost:${PORT}`);
     console.log('=========================================');
 });

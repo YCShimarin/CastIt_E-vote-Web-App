@@ -1,17 +1,17 @@
-{"username":"admin_arsitektur","password":"GoldenRatio","role":"admin_verificator","jurusan":"Arsitektur","nama":"Verifikator Arsitektur","_id":"0A6oknnbHpDmDnoG"}
+{"nama":"azmi","nim":"2121234","username":"azmoy","password":"123","jurusan":"Category A","angkatan":"2121","email":"dsad@gmail.com","role":"user","has_voted":false,"vote":null,"voted_at":null,"created_at":"2026-08-23T19:13:13.025Z","_id":"0eAXYiJjzOvFaZ2Y"}
 {"id":9,"nama":"Kevin Imam Satria","nim":"2110951001","username":"2110951001","password":"kevin@2110951001","email":"kevinimam12@gmail.com","angkatan":"2012","jurusan":"Teknik Mesin","role":"user","has_voted":true,"vote":"kandidat_3","voted_at":"2026-04-25T05:52:44.034Z","_id":"2eMoXga52ftPCxj9"}
 {"id":8,"nama":"Muhammad Reval","nim":"2110952001","username":"2110952001","password":"muhammad@2110952001","email":"muhammadrefal44@gmail.com","angkatan":"2021","jurusan":"Teknik Elektro","role":"user","has_voted":true,"vote":"kandidat_2","voted_at":"2026-04-21T15:01:17.604Z","_id":"3APEQXcuLTf2Drnw"}
 {"id":4,"nama":"Dewi","nim":"85171031","jurusan":"Teknik Industri","email":"dewi@example.com","username":"dewi","password":"dewi@85171031","has_voted":false,"vote":null,"voted_at":null,"_id":"4q0DULKYmtugVb3v"}
+{"id":12,"nama":"Muhammad Reval","nim":"2110952002","username":"2110952002","password":"muhammad@b29bed43cf","email":"muhammadrefal444@gmail.com","angkatan":"2021","jurusan":"Category B","role":"user","has_voted":false,"vote":null,"voted_at":null,"_id":"5OQMppFfLpIKmvT3"}
 {"id":7,"nama":"Annisa cinta ramadhani","nim":"2110952011","username":"2110952011","password":"annisa@2110952011","email":"annisacinta@gmail.com","angkatan":"2021","jurusan":"Teknik Elektro","role":"user","has_voted":true,"vote":"kandidat_3","voted_at":"2026-04-21T15:15:58.998Z","_id":"BDxpW5C0X7AT5JYH"}
-{"username":"admin_sipil","password":"YoungModulus","role":"admin_verificator","jurusan":"Sipil","nama":"Verifikator Sipil","_id":"FbMsMJIyVYUJgNIU"}
-{"id":5,"nama":"Rizky","nim":"85171032","jurusan":"Teknik Lingkungan","email":"rizky@example.com","username":"rizky","password":"rizky@85171032","has_voted":false,"vote":null,"voted_at":null,"_id":"RRYJHUAVVSpxPM2c"}
-{"username":"admin_mesin","password":"FourierHeat","role":"admin_verificator","jurusan":"Teknik Mesin","nama":"Verifikator Mesin","_id":"V7eRRcO8EmkYuLdm"}
+{"username":"admin1","password":"password123","role":"admin_verificator","jurusan":"Category A","nama":"Verificator Category A","_id":"DwaYFfa3aolDO3Zx"}
+{"id":5,"nama":"Rizky","nim":"85171032","jurusan":"Category A","email":"rizky@example.com","username":"rizky","password":"rizky@85171032","has_voted":false,"vote":null,"voted_at":null,"_id":"RRYJHUAVVSpxPM2c","angkatan":""}
+{"username":"admin2","password":"password456","role":"admin_verificator","jurusan":"Category B","nama":"Verificator Category B","_id":"VeNu9KO1JxpYIeMo"}
+{"nama":"yahdi","nim":"12312123","username":"21210989","password":"231","jurusan":"Category A","angkatan":"2020","email":"dasdaws@gmail.com","role":"user","has_voted":false,"vote":null,"voted_at":null,"created_at":"2026-08-23T19:14:04.814Z","_id":"bI4IHOlxexCT1Nyw"}
 {"id":10,"nama":"Andre Kurniawan","nim":"2110951013","username":"2110951013","password":"andre@a93e25f605","email":"andrekurniawan@gmail.com","angkatan":"2021","jurusan":"Teknik Elektro","role":"user","has_voted":false,"vote":null,"voted_at":null,"_id":"dwcYDF4vOwfCILQJ"}
 {"id":6,"nama":"Admin KATUA","nim":"-","jurusan":"-","email":"admin@katua.id","username":"admin","password":"LeMineralAdaManisManisnya","role":"admin","has_voted":false,"vote":null,"voted_at":null,"_id":"iXA0IF4ITAtiLYp4"}
 {"id":3,"nama":"Siti","nim":"85171030","jurusan":"Teknik Sipil","email":"siti@example.com","username":"siti","password":"siti@85171030","has_voted":false,"vote":null,"voted_at":null,"_id":"lSMrIxPOHYo9r1yi"}
-{"id":2,"nama":"Andi","nim":"85171029","jurusan":"Teknik Elektro","email":"andi@example.com","username":"andi","password":"andi@85171029","has_voted":false,"vote":null,"voted_at":null,"_id":"laFHMMYwBrmO8h1S"}
-{"username":"admin_industri","password":"SixSigma","role":"admin_verificator","jurusan":"Industri","nama":"Verifikator Industri","_id":"pOdhQO79aSzQIYuW"}
-{"username":"admin_elektro","password":"FourierTransform","role":"admin_verificator","jurusan":"Teknik Elektro","nama":"Verifikator Elektro","_id":"s84bWMbkyimRUA73"}
-{"username":"admin_lingkungan","password":"DispersionAir","role":"admin_verificator","jurusan":"Lingkungan","nama":"Verifikator Lingkungan","_id":"yCrZoh0amyQ41HPj"}
+{"id":2,"nama":"Andi","nim":"85171029","jurusan":"Teknik Mesin","email":"andi@example.com","username":"andi","password":"andi@85171029","has_voted":false,"vote":null,"voted_at":null,"_id":"laFHMMYwBrmO8h1S","angkatan":""}
+{"id":11,"nama":"anton","nim":"21234321","username":"21234321","password":"anton@d40fd573","email":"welldone@gmail.com","angkatan":"2021","jurusan":"Category A","role":"user","has_voted":false,"vote":null,"voted_at":null,"_id":"xQNZUMbR1jNKY2mf"}
 {"$$indexCreated":{"fieldName":"username","unique":true,"sparse":false}}
 {"$$indexCreated":{"fieldName":"nim","unique":false,"sparse":false}}
