@@ -118,21 +118,21 @@ const doAdminAction = async (req, res) => {
             if (!reqUser) return sendResponse(res, false, 'Registrasi tidak ditemukan', {}, 404);
 
             // Check department permission
-            if (admin.role === 'admin_verificator' && admin.jurusan !== reqUser.jurusan) {
-                return sendResponse(res, false, `Unauthorized: Anda hanya bisa memproses jurusan ${admin.jurusan}`, {}, 403);
+            if (admin.role === 'admin_verificator' && admin.category !== reqUser.category) {
+                return sendResponse(res, false, `Unauthorized: Anda hanya bisa memproses category ${admin.category}`, {}, 403);
             }
 
             // Remove from pending
             await db.pending.remove({ id: requestId });
 
             if (approve) {
-                // Generate Password Aman: MD5(NIM + Secret) ambil sepanjang NIM
+                // Generate Password Aman: MD5(idNumber + Secret) ambil sepanjang idNumber
                 const secretSalt = "ORGXYZ_VOTING_2026"; // Kunci rahasia untuk enkripsi
-                const nimHash = crypto.createHash('md5').update(reqUser.nim + secretSalt).digest('hex');
-                const passwordSuffix = nimHash.substring(0, reqUser.nim.length);
+                const nimHash = crypto.createHash('md5').update(reqUser.idNumber + secretSalt).digest('hex');
+                const passwordSuffix = nimHash.substring(0, reqUser.idNumber.length);
 
-                // Ambil kata pertama dari nama untuk password (huruf kecil)
-                const firstName = reqUser.nama.trim().split(' ')[0].toLowerCase();
+                // Ambil kata pertama dari fullName untuk password (huruf kecil)
+                const firstName = reqUser.fullName.trim().split(' ')[0].toLowerCase();
                 const generatedPassword = `${firstName}@${passwordSuffix}`;
 
                 // Generate ID numerik (max + 1)
@@ -141,29 +141,29 @@ const doAdminAction = async (req, res) => {
 
                 const newUser = {
                     id: nextId,
-                    nama: reqUser.nama,
-                    nim: reqUser.nim,
-                    username: reqUser.nim,
+                    fullName: reqUser.fullName,
+                    idNumber: reqUser.idNumber,
+                    username: reqUser.idNumber,
                     password: generatedPassword,
                     email: reqUser.email,
-                    angkatan: reqUser.angkatan || '-',
-                    jurusan: reqUser.jurusan,
+                    batch: reqUser.batch || '-',
+                    category: reqUser.category,
                     role: 'user',
                     has_voted: false,
                     vote: null,
                     voted_at: null
                 };
                 await db.users.insert(newUser);
-                await writeLog(admin.username, `Approved registration for user ${reqUser.nama} (${reqUser.nim})`);
-                return sendResponse(res, true, `User ${reqUser.nama} telah disetujui.`, {
+                await writeLog(admin.username, `Approved registration for user ${reqUser.fullName} (${reqUser.idNumber})`);
+                return sendResponse(res, true, `User ${reqUser.fullName} telah disetujui.`, {
                     email: reqUser.email,
-                    nama: reqUser.nama,
-                    username: reqUser.nim,
+                    fullName: reqUser.fullName,
+                    username: reqUser.idNumber,
                     password: generatedPassword
                 });
             }
-            await writeLog(admin.username, `Rejected registration for user ${reqUser.nama} (${reqUser.nim})`);
-            return sendResponse(res, true, `Pendaftaran ${reqUser.nama} ditolak.`);
+            await writeLog(admin.username, `Rejected registration for user ${reqUser.fullName} (${reqUser.idNumber})`);
+            return sendResponse(res, true, `Pendaftaran ${reqUser.fullName} ditolak.`);
         }
 
         if (action === 'reset_votes') {
@@ -204,7 +204,7 @@ const doAdminAction = async (req, res) => {
                 const existing = await db.users.findOne({ 
                     $or: [
                         { username: new RegExp(`^${userData.username}$`, 'i') },
-                        { nim: userData.nim },
+                        { idNumber: userData.idNumber },
                         { email: userData.email && userData.email.trim() !== '' ? userData.email : null }
                     ],
                     _id: { $ne: targetId }
@@ -214,7 +214,7 @@ const doAdminAction = async (req, res) => {
                     if (existing.username.toLowerCase() === userData.username.toLowerCase()) {
                         return sendResponse(res, false, 'Username sudah digunakan oleh user lain', {}, 400);
                     }
-                    if (existing.nim === userData.nim) {
+                    if (existing.idNumber === userData.idNumber) {
                         return sendResponse(res, false, 'ID Number sudah digunakan oleh user lain', {}, 400);
                     }
                     if (existing.email === userData.email) {
@@ -239,7 +239,7 @@ const doAdminAction = async (req, res) => {
             const existing = await db.users.findOne({ 
                 $or: [
                     { username: new RegExp(`^${userData.username}$`, 'i') },
-                    { nim: userData.nim },
+                    { idNumber: userData.idNumber },
                     { email: userData.email && userData.email.trim() !== '' ? userData.email : null }
                 ]
             });
@@ -248,7 +248,7 @@ const doAdminAction = async (req, res) => {
                 if (existing.username.toLowerCase() === userData.username.toLowerCase()) {
                     return sendResponse(res, false, 'Username sudah terdaftar', {}, 400);
                 }
-                if (existing.nim === userData.nim) {
+                if (existing.idNumber === userData.idNumber) {
                     return sendResponse(res, false, 'ID Number sudah terdaftar', {}, 400);
                 }
                 if (existing.email === userData.email) {
@@ -277,7 +277,7 @@ const doAdminAction = async (req, res) => {
 
             try {
                 // Ensure the root path exists
-                const rootConfigPath = path.join(__dirname, '../../web_config.json');
+                const rootConfigPath = path.join(__dirname, '../web_config.json');
                 fs.writeFileSync(rootConfigPath, JSON.stringify(configData, null, 2));
 
                 await writeLog(admin.username, `Saved Web Config settings`);

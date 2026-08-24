@@ -45,12 +45,12 @@ const writeUsers = async (data) => {
 const fs = require('fs');
 const readCandidates = async () => {
     try {
-        const configPath = path.join(__dirname, '../../web_config.json');
+        const configPath = path.join(__dirname, '../web_config.json');
         const configStr = fs.readFileSync(configPath, 'utf8');
         const config = JSON.parse(configStr);
         return config.candidates.list.map(c => ({
             id: `kandidat_${c.id}`,
-            nama: c.name,
+            fullName: c.name,
             deskripsi: c.description,
             foto: c.image_path,
             visi: c.visi || 'Visi belum tersedia di konfigurasi.',
@@ -82,7 +82,7 @@ const writeSettings = async (data) => {
 
 const getUserByUsername = async (username) => {
     try {
-        const configPath = path.join(__dirname, '../../web_config.json');
+        const configPath = path.join(__dirname, '../web_config.json');
         const configStr = fs.readFileSync(configPath, 'utf8');
         const config = JSON.parse(configStr);
         if (config.admin && config.admin.accounts) {
@@ -91,9 +91,9 @@ const getUserByUsername = async (username) => {
                 return {
                     username: adminAcc.username,
                     password: adminAcc.password,
-                    nama: adminAcc.username,
+                    fullName: adminAcc.username,
                     role: adminAcc.role === 'verificator' ? 'admin_verificator' : 'admin',
-                    jurusan: adminAcc.category
+                    category: adminAcc.category
                 };
             }
         }

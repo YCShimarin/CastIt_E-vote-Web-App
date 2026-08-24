@@ -1,0 +1,95 @@
+{
+  "website": {
+    "name": "CastIt",
+    "title": "E - Voting System Templates",
+    "description": "Online Voting System Template",
+    "logo_path": "assets/img/logos.png"
+  },
+  "categories": [
+    "Engineering Department",
+    "Informations Technology Department",
+    "Human Resource Department",
+    "Finance Department",
+    "Legal Department"
+  ],
+  "candidates": {
+    "total": 3,
+    "list": [
+      {
+        "id": 1,
+        "name": "Antonio Degurechaff",
+        "description": "Senior Reseacher on Fake University",
+        "image_path": "assets/img/candidate1.png",
+        "visi": "Vision of Candidate 01 for a better future.",
+        "misi": [
+          "First mission of Candidate 01",
+          "Second mission of Candidate 01",
+          "Third mission of Candidate 01"
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Maverick Shelby",
+        "description": "Leader of The Allutraz Drink Company",
+        "image_path": "assets/img/candidate2.png",
+        "visi": "Progressive vision of Candidate 02.",
+        "misi": [
+          "Main mission of Candidate 02",
+          "Additional mission of Candidate 02"
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Eleonore Desmond",
+        "description": "Owner of Desmond Group Property Company",
+        "image_path": "assets/img/candidate3.JPG",
+        "visi": "Innovative vision of Candidate 03.",
+        "misi": [
+          "Focus on innovation",
+          "Member empowerment",
+          "System transparency"
+        ]
+      }
+    ]
+  },
+  "admin": {
+    "accounts": [
+      {
+        "id": "superadmin",
+        "username": "admin",
+        "password": "LeMineralAdaManisManisnya",
+        "role": "admin",
+        "category": "All"
+      },
+      {
+        "id": "admin1",
+        "username": "admin1",
+        "password": "password123",
+        "role": "verificator",
+        "category": "Category A"
+      },
+      {
+        "id": "admin2",
+        "username": "admin2",
+        "password": "password456",
+        "role": "verificator",
+        "category": "Category B"
+      },
+      {
+        "id": "admin3",
+        "username": "admin3",
+        "password": "123",
+        "role": "verificator",
+        "category": "Category C"
+      }
+    ]
+  },
+  "additional_settings": {
+    "theme_color": "#1e3a8a",
+    "show_live_results": true,
+    "allow_registration": true,
+    "contact_whatsapp": "6283800000000",
+    "organization_name": "XYZ Organization",
+    "footer_text": "© 2026 XYZ Organization. All Rights Reserved."
+  }
+}

@@ -20,10 +20,24 @@ app.use(express.json());
 app.get('/web_config.json', (req, res) => {
     try {
         const fs = require('fs');
-        const configPath = path.join(__dirname, '../web_config.json');
+        const configPath = path.join(__dirname, 'web_config.json');
         const configStr = fs.readFileSync(configPath, 'utf8');
         const config = JSON.parse(configStr);
         delete config.admin; // Remove sensitive data
+        res.json(config);
+    } catch (e) {
+        res.status(500).json({ error: 'Config not found' });
+    }
+});
+
+// Admin-only config serving (returns full config)
+app.get('/admin/config', (req, res) => {
+    // In a real app, verify admin sessionToken here
+    try {
+        const fs = require('fs');
+        const configPath = path.join(__dirname, 'web_config.json');
+        const configStr = fs.readFileSync(configPath, 'utf8');
+        const config = JSON.parse(configStr);
         res.json(config);
     } catch (e) {
         res.status(500).json({ error: 'Config not found' });

@@ -55,8 +55,9 @@ const login = async (req, res) => {
         // Standard user response (excluding password)
         const userData = {
             username: user.username,
-            fullName: user.nama,
+            fullName: user.fullName,
             role: user.role || 'user',
+            category: user.category,
             has_voted: user.has_voted,
             vote: user.vote,
             sessionToken: sessionToken

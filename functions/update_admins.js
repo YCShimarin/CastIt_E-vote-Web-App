@@ -14,16 +14,16 @@ async function seedAdmins() {
         username: "admin1",
         password: "password123",
         role: "admin_verificator",
-        jurusan: "Category A",
-        nama: "Verificator Category A"
+        category: "Category A",
+        fullName: "Verificator Category A"
     });
     
     await db.insert({
         username: "admin2",
         password: "password456",
         role: "admin_verificator",
-        jurusan: "Category B",
-        nama: "Verificator Category B"
+        category: "Category B",
+        fullName: "Verificator Category B"
     });
 
     console.log('Successfully added new verificators admin1 (Category A) and admin2 (Category B) to users.db');
