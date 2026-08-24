@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel | KATUA Unand</title>
+    <title>Dashboard Admin | Website Voting</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/png" href="assets/img/logos.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <script>
         if (localStorage.getItem('darkMode') === 'true') {
@@ -121,18 +121,22 @@
             border-bottom: 1px solid #f1f5f9;
             font-size: 0.85rem;
         }
+
+        #audit-log-container {
+            border: 1px solid #f1f5f9;
+        }
     </style>
 </head>
 
 <body>
     <nav>
         <div class="container nav-content">
-            <a href="index.html" class="logo"><img src="assets/img/logos.png" alt="KATUA Unand"
-                    style="height:36px;width:auto;vertical-align:middle;"> KATUA Unand</a>
+            <a href="index.html" class="logo"><img src="assets/img/logos.png" alt="Logo"
+                    style="height:30px;width:auto;vertical-align:middle;"> Voting System</a>
             <div class="nav-links">
                 <span
                     style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;"><i
-                        class="fas fa-shield-halved"></i> Admin Panel</span>
+                        class="fas fa-shield-alt"></i> Admin Panel</span>
                 <button class="btn btn-primary" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </div>
@@ -140,32 +144,35 @@
 
     <div class="container" style="padding-top: 48px; padding-bottom: 80px;">
         <div style="margin-bottom: 40px;">
-            <h1 style="margin-bottom: 6px;">Panel Admin</h1>
-            <p style="color: var(--text-muted);">Kelola sesi voting, ekspor data, dan verifikasi pendaftar baru.</p>
+            <h1 style="margin-bottom: 6px;">Super Admin Dashboard</h1>
+            <p style="color: var(--text-muted);">Manage voting system, users, and election data.</p>
         </div>
 
         <!-- QUICK ACTIONS -->
         <div id="section-quick-actions"
-            style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 30px;">
-            <h2 style="margin-bottom: 20px; font-size: 1rem; color: #64748b; text-transform: uppercase;">⚡ Quick Actions
-            </h2>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                <button class="btn-outline" id="btn-export-excel"><i class="fas fa-chart-pie"
-                        style="color: #16a34a;"></i> Download Hasil Suara (Excel)</button>
-                <button class="btn-outline" id="btn-export-users"><i class="fas fa-users"
-                        style="color: var(--primary);"></i> Download Data Pemilih (Excel)</button>
-                <button class="btn-outline" id="btn-force-sync"><i class="fas fa-sync-alt" style="color: #3b82f6;"></i>
-                    Sync ulang dari File</button>
-                <button class="btn-outline" id="btn-reset-data" style="color: #ef4444; border-color: #fecaca;"><i
-                        class="fas fa-trash-alt"></i> Reset Semua Suara</button>
-            </div>
+            style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 30px;">
+            <h2 style="margin-bottom: 16px; font-size: 1.1rem;">⚡ Quick Actions</h2>
+                <div class="quick-actions" style="margin-bottom: 0;">
+                    <button class="btn btn-outline" id="btn-export-excel">
+                        <i class="fas fa-file-excel" style="color: #10b981;"></i> Export Results
+                    </button>
+                    <button class="btn btn-outline" id="btn-export-users">
+                        <i class="fas fa-users" style="color: #3b82f6;"></i> Export Voters
+                    </button>
+                    <button class="btn btn-outline" id="btn-force-sync">
+                        <i class="fas fa-sync" style="color: #f59e0b;"></i> Force Sync
+                    </button>
+                    <button class="btn btn-outline" id="btn-reset-data" style="color: #ef4444; border-color: #fecaca;">
+                        <i class="fas fa-trash-alt"></i> Reset Data
+                    </button>
+                </div>
         </div>
 
         <!-- STATUS & STATS -->
         <div id="section-voting-status"
             style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-bottom: 30px;">
-            <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
-                <h2 style="margin-bottom: 20px; font-size: 1.1rem;">🗳️ Status Voting</h2>
+            <div id="section-web-settings" style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
+                <h2 style="margin-bottom: 16px; font-size: 1.1rem;">⚙️ Web Template Settings</h2>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <span id="voting-status-label" style="font-weight: 600;"></span>
                     <button class="toggle-btn off" id="voting-toggle"></button>
@@ -173,10 +180,10 @@
                 <div id="toggle-feedback" style="margin-top: 15px; font-size: 0.8rem; color: var(--text-muted);"></div>
             </div>
 
-            <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
-                <h2 style="margin-bottom: 20px; font-size: 1.1rem;">📊 Hasil Suara Sementara</h2>
+            <div id="section-standings" style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
+                <h2 style="margin-bottom: 20px; font-size: 1.1rem;">📊 Vote Standings</h2>
                 <div id="standings-container">
-                    <p style="color: var(--text-muted); font-size: 0.85rem;">Memuat perolehan suara...</p>
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">&copy; 2026 Organization XYZ. All rights reserved.</p>
                 </div>
             </div>
         </div>
@@ -186,48 +193,76 @@
             style="grid-template-columns: repeat(3, 1fr); margin-bottom: 30px;">
             <div class="stat-card">
                 <span class="stat-value" id="stat-total">—</span>
-                <span class="stat-label">Total Pemilih</span>
+                <span class="stat-label">Total Voters</span>
             </div>
             <div class="stat-card">
                 <span class="stat-value" id="stat-voted">—</span>
-                <span class="stat-label">Sudah Voting</span>
+                <span class="stat-label">Voted</span>
             </div>
             <div class="stat-card">
-                <span class="stat-value" id="stat-pending">—</span>
-                <span class="stat-label">Pending Registrasi</span>
+                <span class="stat-value" id="stat-pending" style="color: #f59e0b;">—</span>
+                <span class="stat-label">Pending Approval</span>
             </div>
         </div>
 
-        <!-- USER MANAGEMENT SECTION (Only for Super Admin) -->
-        <div id="section-user-management"
-            style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 30px;">
+        <!-- WEB CONFIG SECTION (Only for Super Admin) -->
+        <div id="section-web-config" style="display: none; background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 30px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
-                <h2 style="font-size: 1.2rem;">👥 Kelola Daftar Pemilih (Role: User)</h2>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <div style="position: relative;">
-                        <input type="text" id="user-search" placeholder="Cari Nama/NIM/Username..." 
-                            style="padding: 10px 15px 10px 35px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.9rem; width: 250px;">
-                        <i class="fas fa-search" style="position: absolute; left: 12px; top: 12px; color: #94a3b8;"></i>
+                <h2 style="font-size: 1.2rem;">⚙️ Web Template Settings</h2>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label for="config-web-name">Website Name (Navbar & Footer)</label>
+                        <input type="text" id="config-web-name" class="form-control" placeholder="E.g., Voting System">
                     </div>
-                    <button class="btn btn-primary" id="btn-add-user" style="padding: 8px 16px; font-size: 0.85rem;">
-                        <i class="fas fa-plus"></i> Tambah User
+                    <div class="form-group">
+                        <label for="config-web-title">Hero Title</label>
+                        <input type="text" id="config-web-title" class="form-control" placeholder="E.g., Organization Election">
+                    </div>
+                    <div class="form-group">
+                        <label for="config-web-desc">Hero Description</label>
+                        <textarea id="config-web-desc" class="form-control" rows="2" placeholder="Brief description on landing page..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="config-web-footer">Footer Text</label>
+                        <input type="text" id="config-web-footer" class="form-control" placeholder="E.g., © 2026 Organization XYZ">
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="config-categories">Categories (Comma-separated)</label>
+                        <textarea id="config-categories" class="form-control" rows="2" placeholder="Category A, Category B, Category C"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btn-save-config" style="width: 100%; justify-content: center; grid-column: 1 / -1;">
+                        <i class="fas fa-save"></i> Save Changes
                     </button>
+                    <p style="margin-top:10px; font-size:0.8rem; color:var(--text-muted); text-align:center; grid-column: 1 / -1;">
+                        * Advanced settings (candidates, logo, etc.) can be edited directly in <code>web_config.json</code>.
+                    </p>
+            </div>
+        </div>
+
+        <!-- USER MANAGEMENT -->
+        <div id="section-user-management" style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-top: 36px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 24px;">
+                <h2 style="margin:0; font-size: 1.2rem;">👥 Manage Users</h2>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="user-search" class="form-control" placeholder="Search name/ID..." style="width: 250px;">
+                    <button class="btn btn-primary" id="btn-add-user"><i class="fas fa-plus"></i> Add User</button>
                 </div>
             </div>
             
-            <div style="overflow-x: auto;">
-                <table class="pending-table" id="user-management-table">
+            <div class="table-responsive">
+                <table class="pending-table" id="users-table">
                     <thead>
                         <tr>
-                            <th>Nama / Email</th>
-                            <th>NIM / Username</th>
-                            <th>Jurusan</th>
-                            <th>Status Vote</th>
-                            <th>Aksi</th>
+                            <th>Name / Email</th>
+                            <th>Username / ID</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="user-list-container">
-                        <tr><td colspan="5" style="text-align:center; padding: 30px; color: var(--text-muted);">Memuat data user...</td></tr>
+                        <tr><td colspan="5" style="text-align:center; padding: 30px; color: var(--text-muted);">Loading user data...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -236,20 +271,23 @@
 
         <!-- TABLES & LOGS -->
         <div id="section-main-table"
-            style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 30px; align-items: start;">
-            <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
-                <h2 style="font-size: 1.2rem; margin-bottom: 20px;">📋 Verifikasi Pendaftar Baru</h2>
+            style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 30px; align-items: start; margin-top: 30px;">
+            <div id="section-new-registrant" style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
+                <h2 style="font-size: 1.2rem; margin-bottom: 20px;">📋 New Registrant Verification</h2>
                 <div id="pending-table-container">
-                    <p style="color: var(--text-muted);">Memuat data...</p>
+                    <p style="color: var(--text-muted);">Loading data...</p>
                 </div>
             </div>
 
             <div id="section-audit-log"
-                style="background: white; border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
-                <h2 style="font-size: 1.2rem; margin-bottom: 20px;">🛡️ Audit Log</h2>
+                style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-size: 1.2rem; margin: 0;">🛡️ Audit Log</h2>
+                    <button class="btn btn-outline" id="btn-view-all-logs" style="padding: 4px 12px; font-size: 0.8rem;">View All</button>
+                </div>
                 <div id="audit-log-container"
-                    style="max-height: 400px; overflow-y: auto; border: 1px solid #f1f5f9; border-radius: 12px;">
-                    <p style="padding: 20px; color: var(--text-muted); text-align: center;">Belum ada aktivitas.</p>
+                    style="max-height: 400px; overflow-y: auto; border-radius: 12px;">
+                    <p style="padding: 20px; color: var(--text-muted); text-align: center;">No activity yet.</p>
                 </div>
             </div>
         </div>
@@ -257,25 +295,40 @@
 
     <div id="toast" class="toast"></div>
 
-    <!-- USER MODAL -->
-    <div class="modal" id="user-modal" style="z-index: 1001;">
+    <!-- MODAL ALL LOGS -->
+    <div class="modal" id="logs-modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin:0; font-size:1.2rem;">🛡️ All Audit Logs</h2>
+                <button class="close-modal" id="close-logs-modal" style="position:static;"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="full-audit-log-container" style="max-height: 60vh; overflow-y: auto; border: 1px solid var(--border-light, #f1f5f9); border-radius: 12px; padding: 10px;">
+                <p style="padding: 20px; color: var(--text-muted); text-align: center;">Loading logs...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL USER -->
+    <div class="modal" id="user-modal">
         <div class="modal-content" style="max-width: 500px;">
-            <button class="close-modal" id="close-user-modal"><i class="fas fa-times"></i></button>
-            <h2 id="modal-user-title" style="margin-bottom: 20px;">Tambah User</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 id="modal-user-title" style="margin:0; font-size:1.2rem;">Add New User</h2>
+                <button class="close-modal" id="close-user-modal" style="position:static;"><i class="fas fa-times"></i></button>
+            </div>
             <form id="user-form">
                 <input type="hidden" id="edit-user-id">
                 <div class="form-group">
-                    <label>Nama Lengkap</label>
-                    <input type="text" id="user-nama" class="form-control" placeholder="Nama Lengkap" required>
+                    <label>Full Name</label>
+                    <input type="text" id="user-fullName" class="form-control" required>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
-                        <label>NIM</label>
-                        <input type="text" id="user-nim" class="form-control" placeholder="NIM" required>
+                        <label>Username</label>
+                        <input type="text" id="user-username" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" id="user-username" class="form-control" placeholder="Username" required>
+                        <label>ID Number</label>
+                        <input type="text" id="user-idNumber" class="form-control" required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -284,33 +337,28 @@
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
-                        <label>Jurusan</label>
-                        <select id="user-jurusan" class="form-control" required>
-                            <option value="Teknik Elektro">Teknik Elektro</option>
-                            <option value="Teknik Mesin">Teknik Mesin</option>
-                            <option value="Sipil">Teknik Sipil</option>
-                            <option value="Lingkungan">Teknik Lingkungan</option>
-                            <option value="Industri">Teknik Industri</option>
-                            <option value="Arsitektur">Prodi Arsitektur</option>
+                        <label>Category</label>
+                        <select id="user-category" class="form-control" required>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Angkatan</label>
-                        <input type="number" id="user-angkatan" class="form-control" placeholder="2020">
+                        <label>Batch</label>
+                        <input type="number" id="user-batch" class="form-control" placeholder="2020">
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" id="user-email" class="form-control" placeholder="email@contoh.com">
+                    <input type="email" id="user-email" class="form-control" placeholder="email@example.com">
                 </div>
                 <div style="margin-top: 20px; display: flex; gap: 10px;">
-                    <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;">Simpan Data</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;">Save Data</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script src="js/utils/darkMode.js"></script>
+    <script src="js/utils/templateSync.js"></script>
     <script type="module" src="js/pages/admin.js"></script>
 </body>
 

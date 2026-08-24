@@ -25,15 +25,21 @@ const initAdminPage = async () => {
 
         // Update titles
         const h1 = document.querySelector('h1');
-        if (h1) h1.textContent = `Verifikator ${user.jurusan}`;
+        if (h1) h1.textContent = `Verificator ${user.category}`;
         const p = document.querySelector('p[style*="color: var(--text-muted)"]');
-        if (p) p.textContent = `Anda bertugas memproses pendaftaran khusus jurusan ${user.jurusan}.`;
+        if (p) p.textContent = `You are tasked with processing registrations specifically for ${user.category}.`;
     }
 
     // Logout
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
-        logoutBtn.onclick = () => {
+        logoutBtn.onclick = async () => {
+            if (user.sessionToken) {
+                await apiFetch('/auth/logout', {
+                    method: 'POST',
+                    body: JSON.stringify({ sessionToken: user.sessionToken })
+                });
+            }
             localStorage.removeItem('user');
             window.location.href = 'index.html';
         };
@@ -50,7 +56,7 @@ const initAdminPage = async () => {
             toggleBtn.className = `toggle-btn ${isOpen ? 'on' : 'off'}`;
         }
         if (statusLabel) {
-            statusLabel.textContent = isOpen ? '✅ Voting DIBUKA' : '🔒 Voting DITUTUP';
+            statusLabel.textContent = isOpen ? '✅ Voting OPENED' : '🔒 Voting CLOSED';
             statusLabel.style.color = isOpen ? '#16a34a' : '#64748b';
         }
     };
@@ -75,14 +81,14 @@ const initAdminPage = async () => {
                     }));
                     const ws = XLSX.utils.json_to_sheet(data);
                     const wb = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(wb, ws, "Hasil");
+                    XLSX.utils.book_append_sheet(wb, ws, "Results");
                     XLSX.writeFile(wb, `KATUA_VOTING_REPORT.xlsx`);
                 } else {
-                    showToast('Gagal ambil data hasil: ' + (res.message || 'Error'), 'error');
+                    showToast('Failed to fetch results data: ' + (res.message || 'Error'), 'error');
                 }
             } catch (e) { 
                 console.error('Export Error:', e);
-                showToast('Gagal ekspor Hasil: ' + e.message, 'error'); 
+                showToast('Failed to export results: ' + e.message, 'error'); 
             }
         };
     }
@@ -100,26 +106,26 @@ const initAdminPage = async () => {
                 if (res && res.success) {
                     const data = res.data.map(u => ({
                         'ID': u.id,
-                        'Nama': u.nama,
-                        'NIM': u.nim,
-                        'Angkatan': u.angkatan,
-                        'Jurusan': u.jurusan,
+                        'Name': u.fullName,
+                        'User ID': u.idNumber,
+                        'Batch': u.batch,
+                        'Category': u.category,
                         'Email': u.email,
-                        'Status Voting': u.has_voted ? 'SUDAH' : 'BELUM',
-                        'Pilihan (ID)': u.vote || '-',
-                        'Waktu Voting': u.voted_at ? new Date(u.voted_at).toLocaleString() : '-'
+                        'Voting Status': u.has_voted ? 'VOTED' : 'NOT YET',
+                        'Choice (ID)': u.vote || '-',
+                        'Vote Time': u.voted_at ? new Date(u.voted_at).toLocaleString() : '-'
                     }));
                     const ws = XLSX.utils.json_to_sheet(data);
                     const wb = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(wb, ws, "Data Pemilih");
+                    XLSX.utils.book_append_sheet(wb, ws, "Voter Data");
                     XLSX.writeFile(wb, `KATUA_VOTERS_LIST.xlsx`);
-                    showToast('Data pemilih berhasil diunduh');
+                    showToast('Voter data successfully downloaded');
                 } else {
-                    showToast('Gagal ambil data user: ' + (res.message || 'Error'), 'error');
+                    showToast('Failed to fetch user data: ' + (res.message || 'Error'), 'error');
                 }
             } catch (e) { 
                 console.error('Export Users Error:', e);
-                showToast('Gagal ekspor Data Pemilih: ' + e.message, 'error'); 
+                showToast('Failed to export Voter Data: ' + e.message, 'error'); 
             }
         };
     }
@@ -128,7 +134,7 @@ const initAdminPage = async () => {
     const syncBtn = document.getElementById('btn-force-sync');
     if (syncBtn) {
         syncBtn.onclick = async () => {
-            if (confirm('Sinkronisasi ulang akan mereset data di browser Anda ke data asli dari file JSON. Lanjutkan?')) {
+            if (confirm('Resyncing will reset browser data to original JSON file. Continue?')) {
                 await apiFetch('/admin/action', { method: 'POST', body: JSON.stringify({ action: 'force_sync', username: user.username }) });
                 window.location.reload();
             }
@@ -139,13 +145,13 @@ const initAdminPage = async () => {
     const resetBtn = document.getElementById('btn-reset-data');
     if (resetBtn) {
         resetBtn.onclick = async () => {
-            if (confirm('⚠️ PERINGATAN: Menghapus semua hasil suara?')) {
+            if (confirm('⚠️ WARNING: Delete all votes?')) {
                 const res = await apiFetch('/admin/action', { method: 'POST', body: JSON.stringify({ action: 'reset_votes', username: user.username }) });
                 if (res && res.success) {
                     loadAdminData();
-                    showToast('Database Suara Direset');
+                    showToast('Voting Database Reset');
                 } else {
-                    showToast(res.message || 'Gagal mereset', 'error');
+                    showToast(res.message || 'Reset failed', 'error');
                 }
             }
         };
@@ -160,11 +166,83 @@ const initAdminPage = async () => {
             });
             if (res && res.success) {
                 updateToggleUI(res.data.voting_open);
-                if (feedback) feedback.textContent = `Pembaruan terakhir: ${new Date().toLocaleTimeString()}`;
+                if (feedback) feedback.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
                 loadAdminData();
             } else {
-                showToast(res.message || 'Gagal mengubah status', 'error');
+                showToast(res.message || 'Failed to change status', 'error');
             }
+        };
+    }
+
+    // --- WEB CONFIG MANAGEMENT ---
+    let currentWebConfig = {};
+    const loadWebConfig = async () => {
+        if (user.role !== 'admin') return;
+        try {
+            const res = await fetch('/admin/config');
+            if (res.ok) {
+                currentWebConfig = await res.json();
+                const configSection = document.getElementById('section-web-config');
+                if (configSection) configSection.style.display = 'block';
+                
+                if (currentWebConfig.website) {
+                    document.getElementById('config-web-name').value = currentWebConfig.website.name || '';
+                    document.getElementById('config-web-title').value = currentWebConfig.website.title || '';
+                    document.getElementById('config-web-desc').value = currentWebConfig.website.description || '';
+                }
+                if (currentWebConfig.additional_settings) {
+                    document.getElementById('config-web-footer').value = currentWebConfig.additional_settings.footer_text || '';
+                }
+                if (currentWebConfig.categories) {
+                    document.getElementById('config-categories').value = currentWebConfig.categories.join(', ');
+                    
+                    // Populate User Category dropdown in Add User Modal
+                    const userJurusan = document.getElementById('user-category');
+                    if (userJurusan) {
+                        userJurusan.innerHTML = '';
+                        currentWebConfig.categories.forEach(cat => {
+                            const opt = document.createElement('option');
+                            opt.value = cat;
+                            opt.textContent = cat;
+                            userJurusan.appendChild(opt);
+                        });
+                    }
+                }
+            }
+        } catch (e) {
+            console.error('Failed to load web config', e);
+        }
+    };
+
+    const saveConfigBtn = document.getElementById('btn-save-config');
+    if (saveConfigBtn) {
+        saveConfigBtn.onclick = async () => {
+            saveConfigBtn.disabled = true;
+            saveConfigBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            
+            if (!currentWebConfig.website) currentWebConfig.website = {};
+            currentWebConfig.website.name = document.getElementById('config-web-name').value;
+            currentWebConfig.website.title = document.getElementById('config-web-title').value;
+            currentWebConfig.website.description = document.getElementById('config-web-desc').value;
+            
+            if (!currentWebConfig.additional_settings) currentWebConfig.additional_settings = {};
+            currentWebConfig.additional_settings.footer_text = document.getElementById('config-web-footer').value;
+
+            const catsStr = document.getElementById('config-categories').value;
+            currentWebConfig.categories = catsStr.split(',').map(c => c.trim()).filter(c => c);
+
+            const res = await apiFetch('/admin/action', {
+                method: 'POST',
+                body: JSON.stringify({ action: 'save_config', username: user.username, configData: currentWebConfig })
+            });
+
+            if (res && res.success) {
+                showToast('Web Configuration Saved Successfully!');
+            } else {
+                showToast(res.message || 'Failed to save configuration', 'error');
+            }
+            saveConfigBtn.disabled = false;
+            saveConfigBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
         };
     }
 
@@ -177,28 +255,42 @@ const initAdminPage = async () => {
         const res = await apiFetch('/admin/users?username=' + user.username);
         if (res && res.success) {
             allUsers = res.data.filter(u => u.role === 'user' || !u.role);
-            renderUserTable(allUsers);
+            filteredUsers = [...allUsers];
+            currentPage = 1;
+            renderUserTable(filteredUsers);
         }
     };
 
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
     const renderUserTable = (usersList) => {
         const container = document.getElementById('user-list-container');
+        const paginationContainer = document.getElementById('user-pagination');
         if (!container) return;
 
         if (usersList.length === 0) {
-            container.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;">Tidak ada user ditemukan.</td></tr>';
+            container.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;">No users found.</td></tr>';
+            if (paginationContainer) paginationContainer.innerHTML = '';
             return;
         }
 
-        container.innerHTML = usersList.map(u => `
+        const totalPages = Math.ceil(usersList.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const currentData = usersList.slice(start, end);
+
+        container.innerHTML = currentData.map(u => `
             <tr>
-                <td><strong>${u.nama}</strong><br><span style="font-size:0.7rem;color:var(--text-muted);">${u.email || '-'}</span></td>
-                <td><code>${u.username}</code><br><span style="font-size:0.7rem;color:var(--text-muted);">NIM: ${u.nim}</span></td>
-                <td>${u.jurusan}<br><span style="font-size:0.7rem;color:var(--text-muted);">Angk. ${u.angkatan || '-'}</span></td>
+                <td><strong>${u.fullName}</strong><br><span style="font-size:0.7rem;color:var(--text-muted);">${u.email || '-'}</span></td>
+                <td><code>${u.username}</code><br><span style="font-size:0.7rem;color:var(--text-muted);">ID: ${u.idNumber}</span></td>
+                <td>${u.category}<br><span style="font-size:0.7rem;color:var(--text-muted);">Batch ${u.batch || '-'}</span></td>
                 <td>
                     ${u.has_voted ? 
-                        '<span style="color:#16a34a; font-size:0.8rem; font-weight:600;"><i class="fas fa-check-circle"></i> SUDAH</span>' : 
-                        '<span style="color:#94a3b8; font-size:0.8rem;"><i class="fas fa-clock"></i> BELUM</span>'}
+                        '<span style="color:#16a34a; font-size:0.8rem; font-weight:600;"><i class="fas fa-check-circle"></i> VOTED</span>' : 
+                        '<span style="color:#94a3b8; font-size:0.8rem;"><i class="fas fa-clock"></i> PENDING</span>'}
                 </td>
                 <td>
                     <div style="display:flex; gap:5px;">
@@ -208,6 +300,19 @@ const initAdminPage = async () => {
                 </td>
             </tr>
         `).join('');
+
+        if (paginationContainer) {
+            let pagHtml = '';
+            pagHtml += `<button class="btn btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="changePage(-1)" ${currentPage === 1 ? 'disabled' : ''}>Prev</button>`;
+            pagHtml += `<span style="font-size:0.9rem; align-self:center;">Page ${currentPage} of ${totalPages}</span>`;
+            pagHtml += `<button class="btn btn-outline" style="padding:4px 10px; font-size:0.8rem;" onclick="changePage(1)" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
+            paginationContainer.innerHTML = pagHtml;
+        }
+    };
+
+    window.changePage = (dir) => {
+        currentPage += dir;
+        renderUserTable(filteredUsers);
     };
 
     // Search Logic
@@ -216,10 +321,11 @@ const initAdminPage = async () => {
         searchInput.oninput = (e) => {
             const val = e.target.value.toLowerCase();
             filteredUsers = allUsers.filter(u => 
-                u.nama.toLowerCase().includes(val) || 
-                u.nim.toLowerCase().includes(val) || 
+                u.fullName.toLowerCase().includes(val) || 
+                u.idNumber.toLowerCase().includes(val) || 
                 u.username.toLowerCase().includes(val)
             );
+            currentPage = 1;
             renderUserTable(filteredUsers);
         };
     }
@@ -232,7 +338,7 @@ const initAdminPage = async () => {
 
     if (addUserBtn) {
         addUserBtn.onclick = () => {
-            document.getElementById('modal-user-title').textContent = 'Tambah User Baru';
+            document.getElementById('modal-user-title').textContent = 'Add New User';
             userForm.reset();
             document.getElementById('edit-user-id').value = '';
             userModal.classList.add('open');
@@ -247,30 +353,30 @@ const initAdminPage = async () => {
         const u = allUsers.find(x => x._id === id);
         if (!u) return;
 
-        document.getElementById('modal-user-title').textContent = 'Edit Data User';
+        document.getElementById('modal-user-title').textContent = 'Edit User Data';
         document.getElementById('edit-user-id').value = u._id;
-        document.getElementById('user-nama').value = u.nama;
-        document.getElementById('user-nim').value = u.nim;
+        document.getElementById('user-fullName').value = u.fullName;
+        document.getElementById('user-idNumber').value = u.idNumber;
         document.getElementById('user-username').value = u.username;
         document.getElementById('user-password').value = u.password;
-        document.getElementById('user-jurusan').value = u.jurusan;
-        document.getElementById('user-angkatan').value = u.angkatan || '';
+        document.getElementById('user-category').value = u.category;
+        document.getElementById('user-batch').value = u.batch || '';
         document.getElementById('user-email').value = u.email || '';
 
         userModal.classList.add('open');
     };
 
     window.deleteUser = async (id) => {
-        if (!confirm('Apakah Anda yakin ingin menghapus user ini?')) return;
+        if (!confirm('Are you sure you want to delete this user?')) return;
         const res = await apiFetch('/admin/action', {
             method: 'POST',
             body: JSON.stringify({ action: 'delete_user', username: user.username, targetId: id })
         });
         if (res && res.success) {
-            showToast('User berhasil dihapus');
+            showToast('User deleted successfully');
             loadUserManagement();
         } else {
-            showToast(res.message || 'Gagal menghapus', 'error');
+            showToast(res.message || 'Failed to delete', 'error');
         }
     };
 
@@ -281,12 +387,12 @@ const initAdminPage = async () => {
             const action = editId ? 'update_user' : 'create_user';
             
             const userData = {
-                nama: document.getElementById('user-nama').value,
-                nim: document.getElementById('user-nim').value,
+                fullName: document.getElementById('user-fullName').value,
+                idNumber: document.getElementById('user-idNumber').value,
                 username: document.getElementById('user-username').value,
                 password: document.getElementById('user-password').value,
-                jurusan: document.getElementById('user-jurusan').value,
-                angkatan: document.getElementById('user-angkatan').value,
+                category: document.getElementById('user-category').value,
+                batch: document.getElementById('user-batch').value,
                 email: document.getElementById('user-email').value
             };
 
@@ -300,7 +406,7 @@ const initAdminPage = async () => {
                 userModal.classList.remove('open');
                 loadUserManagement();
             } else {
-                showToast(res.message || 'Gagal menyimpan data', 'error');
+                showToast(res.message || 'Failed to save data', 'error');
             }
         };
     }
@@ -318,14 +424,14 @@ const initAdminPage = async () => {
             
             // If approved, trigger mailto
             if (approve && res.data && res.data.email) {
-                const mailBody = `Halo ${res.data.nama},\n\nPendaftaran akun voting KATUA Anda telah disetujui.\n\nUsername: ${res.data.username}\nPassword: ${res.data.password}\n\nSilakan login dan berikan suara Anda pada tanggal pemilihan nanti.\n\nTerima kasih.`;
-                const mailtoUrl = `mailto:${res.data.email}?subject=Konfirmasi Akun Voting KATUA&body=${encodeURIComponent(mailBody)}`;
+                const mailBody = `Hello ${res.data.fullName},\n\nYour voting account registration has been approved.\n\nUsername: ${res.data.username}\nPassword: ${res.data.password}\n\nPlease login and cast your vote on the election day.\n\nThank you.`;
+                const mailtoUrl = `mailto:${res.data.email}?subject=Voting Account Confirmation&body=${encodeURIComponent(mailBody)}`;
                 window.open(mailtoUrl, '_blank');
             }
             
             loadAdminData();
         } else {
-            showToast(res.message || 'Gagal memproses', 'error');
+            showToast(res.message || 'Failed to process', 'error');
         }
     };
 
@@ -334,19 +440,19 @@ const initAdminPage = async () => {
         if (!container) return;
 
         if (!pending || pending.length === 0) {
-            container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">Tidak ada pendaftaran tertunda.</p>';
+            container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">No pending registrations.</p>';
             return;
         }
 
-        let html = '<table class="pending-table"><thead><tr><th>Nama</th><th>NIM</th><th>Jurusan</th><th>Aksi</th></tr></thead><tbody>';
+        let html = '<table class="pending-table"><thead><tr><th>Name</th><th>User ID</th><th>Category</th><th>Action</th></tr></thead><tbody>';
         pending.forEach(p => {
             html += `<tr>
-                <td><strong>${p.nama}</strong><br><span style="font-size:0.7rem;color:var(--text-muted);">${p.email}</span></td>
-                <td>${p.nim}</td>
-                <td>${p.jurusan}</td>
+                <td><strong>${p.fullName}</strong><br><span style="font-size:0.7rem;color:var(--text-muted);">${p.email}</span></td>
+                <td>${p.idNumber}</td>
+                <td>${p.category}</td>
                 <td style="white-space:nowrap;">
-                    <button class="btn-sm-approve" onclick="processReg(${p.id}, true)">Setuju</button>
-                    <button class="btn-sm-reject" onclick="processReg(${p.id}, false)">Tolak</button>
+                    <button class="btn-sm-approve" onclick="processReg(${p.id}, true)">Approve</button>
+                    <button class="btn-sm-reject" onclick="processReg(${p.id}, false)">Reject</button>
                 </td>
             </tr>`;
         });
@@ -354,12 +460,16 @@ const initAdminPage = async () => {
         container.innerHTML = html;
     };
 
+    let globalLogs = [];
+
     const renderAuditLogs = (logs) => {
+        globalLogs = logs;
         const container = document.getElementById('audit-log-container');
         if (!container) return;
         if (!logs || logs.length === 0) return;
 
-        container.innerHTML = logs.map(l => `
+        const visibleLogs = logs.slice(0, 5);
+        container.innerHTML = visibleLogs.map(l => `
             <div class="audit-item">
                 <span class="audit-time">${new Date(l.time).toLocaleTimeString()}</span>
                 <strong>${l.user}</strong>: ${l.action}
@@ -367,11 +477,36 @@ const initAdminPage = async () => {
         `).join('');
     };
 
+    const initLogsModal = () => {
+        const btnViewAll = document.getElementById('btn-view-all-logs');
+        const logsModal = document.getElementById('logs-modal');
+        const closeLogsBtn = document.getElementById('close-logs-modal');
+        const fullContainer = document.getElementById('full-audit-log-container');
+
+        if (btnViewAll && logsModal && closeLogsBtn && fullContainer) {
+            btnViewAll.onclick = () => {
+                logsModal.style.display = 'flex';
+                if (globalLogs.length === 0) {
+                    fullContainer.innerHTML = '<p style="padding: 20px; color: var(--text-muted); text-align: center;">No activity yet.</p>';
+                } else {
+                    fullContainer.innerHTML = globalLogs.map(l => `
+                        <div class="audit-item">
+                            <span class="audit-time" style="width: 150px; display: inline-block;">${new Date(l.time).toLocaleString()}</span>
+                            <strong>${l.user}</strong>: ${l.action}
+                        </div>
+                    `).join('');
+                }
+            };
+            closeLogsBtn.onclick = () => { logsModal.style.display = 'none'; };
+        }
+    };
+    initLogsModal();
+
     const renderStandings = (data) => {
         const container = document.getElementById('standings-container');
         if (!container || !data.candidates) return;
 
-        let html = '<table class="pending-table" style="margin:0;"><thead><tr><th>Kandidat</th><th>Suara</th><th>%</th></tr></thead><tbody>';
+        let html = '<table class="pending-table" style="margin:0;"><thead><tr><th>Candidate</th><th>Votes</th><th>%</th></tr></thead><tbody>';
         data.candidates.forEach(c => {
             const count = data.voteCounts[c.id]?.count || 0;
             const pct = data.voteCounts[c.id]?.percentage || 0;
@@ -400,6 +535,10 @@ const initAdminPage = async () => {
             if (pendingEl) pendingEl.textContent = res.data.pending_count || 0;
 
             renderPendingTable(res.data.pending_users);
+            
+            if (res.data.logs) {
+                renderAuditLogs(res.data.logs);
+            }
         }
 
         // Load Standings (Skip if verificator)
@@ -413,6 +552,7 @@ const initAdminPage = async () => {
 
     loadAdminData();
     loadUserManagement();
+    loadWebConfig();
 };
 
 document.addEventListener('DOMContentLoaded', initAdminPage);

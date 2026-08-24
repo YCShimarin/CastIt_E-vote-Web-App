@@ -52,4 +52,24 @@ const showToast = (message, type = 'success') => {
     }
 };
 
+// --- Heartbeat Logic for Single-Device Login ---
+setInterval(async () => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+        try {
+            const user = JSON.parse(userStr);
+            if (user.sessionToken) {
+                // Send heartbeat silently in the background
+                await fetch(`${API_BASE}/auth/heartbeat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionToken: user.sessionToken })
+                });
+            }
+        } catch (e) {
+            // Ignore parse errors silently
+        }
+    }
+}, 60000); // 1 minute interval
+
 export { apiFetch, showToast };

@@ -4,10 +4,10 @@ export const createCandidateCard = (candidate, onVote, hasVoted, userVote) => {
     card.className = 'candidate-card' + (isVotedThisCard ? ' voted-card' : '');
 
     const btnLabel = isVotedThisCard
-        ? '<i class="fas fa-check-circle"></i> Pilihan Anda'
+        ? '<i class="fas fa-check-circle"></i> Your Choice'
         : hasVoted
-            ? 'Voting Selesai'
-            : '<i class="fas fa-vote-yea"></i> Pilih Kandidat';
+            ? 'Voting Closed'
+            : '<i class="fas fa-vote-yea"></i> Vote Candidate';
 
     const btnClass = isVotedThisCard
         ? 'btn btn-voted'
@@ -19,10 +19,10 @@ export const createCandidateCard = (candidate, onVote, hasVoted, userVote) => {
     card.innerHTML = `
         <img src="${candidate.foto}" alt="${candidate.nama}" class="candidate-img">
         <div class="candidate-info">
-            <span class="candidate-tag${isVotedThisCard ? ' voted-badge' : ''}">Kandidat 0${num}</span>
+            <span class="candidate-tag${isVotedThisCard ? ' voted-badge' : ''}">Candidate 0${num}</span>
             <h3 style="margin-top: 10px;">${candidate.nama}</h3>
             <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 16px; min-height: 42px;">${candidate.deskripsi}</p>
-            <p style="font-size: 0.8rem; color: var(--primary); margin-bottom: 14px;"><i class="fas fa-eye"></i> Klik kartu untuk lihat Visi &amp; Misi</p>
+            <p style="font-size: 0.8rem; color: var(--primary); margin-bottom: 14px;"><i class="fas fa-eye"></i> Click card to view Vision &amp; Missions</p>
             <button class="${btnClass}" id="vote-btn-${candidate.id}" ${hasVoted ? 'disabled' : ''} style="width: 100%; justify-content: center;">
                 ${btnLabel}
             </button>
@@ -52,19 +52,19 @@ const showCandidateModal = (candidate) => {
         <div class="modal-header">
             <img src="${candidate.foto}" class="modal-avatar" alt="${candidate.nama}">
             <div>
-                <span class="modal-tag">Kandidat 0${num}</span>
+                <span class="modal-tag">Candidate 0${num}</span>
                 <h2>${candidate.nama}</h2>
                 <p style="font-size: 0.85rem; color: var(--text-muted);">${candidate.deskripsi}</p>
             </div>
         </div>
         <h4 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); margin-bottom: 10px;">
-            <i class="fas fa-eye"></i> Visi
+            <i class="fas fa-eye"></i> Vision
         </h4>
         <p style="color: var(--text-dark); background: var(--primary-light); padding: 14px 18px; border-radius: 10px; font-size: 0.9rem; margin-bottom: 24px;">
-            "${candidate.visi || 'Visi belum tersedia.'}"
+            "${candidate.visi || 'Vision not available.'}"
         </p>
         <h4 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); margin-bottom: 10px;">
-            <i class="fas fa-list-check"></i> Misi
+            <i class="fas fa-list-check"></i> Missions
         </h4>
         <ul class="misi-list">${misiHtml}</ul>
     `;

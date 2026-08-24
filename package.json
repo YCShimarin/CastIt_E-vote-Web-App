@@ -1,4 +1,11 @@
 {
+  "name": "voting-web-template",
+  "version": "1.0.0",
+  "description": "Custom Web Voting Template",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx serve public"
+  },
   "dependencies": {
     "firebase": "^12.12.1",
     "xlsx": "^0.18.5"

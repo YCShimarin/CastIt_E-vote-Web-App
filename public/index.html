@@ -4,12 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KATUA Unand | Voting Ketua Alumni Teknik Universitas Andalas</title>
-    <meta name="description"
-        content="Sistem Pemilihan Online Ketua KATUA Unand — Keluarga Alumni Teknik Universitas Andalas.">
+    <title id="page-title">Website Voting | Online Voting System</title>
+    <meta name="description" id="page-description" content="Online Voting System Template for Organization Election.">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" type="image/png" href="assets/img/logos.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="assets/img/logos.png" id="favicon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>
         if (localStorage.getItem('darkMode') === 'true') {
             document.documentElement.classList.add('dark-mode');
@@ -21,13 +20,13 @@
 
     <nav>
         <div class="container nav-content">
-            <a href="index.html" class="logo"><img src="assets/img/logos.png" alt="KATUA Unand"
-                    style="height:30px;width:auto;vertical-align:middle;"> KATUA Unand</a>
+            <a href="index.html" class="logo"><img src="assets/img/logos.png" id="nav-logo" alt="Logo"
+                    style="height:30px;width:auto;vertical-align:middle;"> <span id="nav-title">KATUA Unand</span></a>
             <div class="nav-links">
-                <a href="#tentang">Tentang</a>
-                <a href="#kandidat">Kandidat</a>
-                <a href="vote.html" class="btn btn-primary" id="nav-dashboard-btn" style="display:none;">Dashboard
-                    Voting</a>
+                <a href="#tentang">About</a>
+                <a href="#kandidat">Candidates</a>
+                <a href="vote.html" class="btn btn-primary" id="nav-dashboard-btn" style="display:none;">Voting
+                    Dashboard</a>
                 <a href="#login" class="btn btn-primary" id="nav-login-btn">Login &rarr;</a>
             </div>
         </div>
@@ -37,24 +36,25 @@
     <header class="hero">
         <div class="container">
             <div class="hero-content">
-                <div class="hero-badge"><i class="fas fa-vote-yea"></i> Pemilihan Umum 2026</div>
-                <h1>Pilih Ketua <span>KATUA Unand</span> Berikutnya</h1>
-                <p>Keluarga Alumni Teknik Universitas Andalas mengundang Anda untuk ikut menentukan masa depan
-                    organisasi yang lebih progresif dan berdampak.</p>
+                <div class="hero-badge"><i class="fas fa-vote-yea"></i> <span id="hero-badge-text">General Election
+                        2026</span></div>
+                <h1 id="hero-title">Choose The Next <span>Organization XYZ</span> Leader</h1>
+                <p id="hero-desc">Our organization invites you to participate and determine a better, more progressive
+                    future.</p>
                 <div class="hero-cta">
-                    <a href="#login" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Mulai Voting</a>
+                    <a href="#login" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Start Voting</a>
                     <a href="#tentang" class="btn"
-                        style="background:white; color:var(--primary); border:2px solid var(--primary-light);">Kenali
-                        KATUA</a>
+                        style="background:white; color:var(--primary); border:2px solid var(--primary-light);">Learn
+                        More</a>
                 </div>
             </div>
             <div class="hero-panel">
-                <img src="assets/img/Ketua.jpg" alt="KATUA Unand">
+                <img src="assets/img/hero-img.JPG" alt="Hero Image">
                 <div class="hero-floating">
                     <div class="hero-floating-icon"><i class="fas fa-users"></i></div>
                     <div>
-                        <strong>5,000+</strong>
-                        <span>Alumni Terdaftar</span>
+                        <strong id="hero-stat-value">10,000+</strong>
+                        <span id="hero-stat-label">Registered Users</span>
                     </div>
                 </div>
             </div>
@@ -66,16 +66,16 @@
         <div class="container">
             <div class="stats-bar-inner">
                 <div class="stats-bar-item">
-                    <span class="val">5,000+</span>
-                    <span class="lbl">Alumni Aktif</span>
+                    <span class="val">10,000+</span>
+                    <span class="lbl">Active Users</span>
                 </div>
                 <div class="stats-bar-item">
-                    <span class="val">5</span>
-                    <span class="lbl">Program Studi Teknik</span>
+                    <span class="val">15</span>
+                    <span class="lbl">Regional Branches</span>
                 </div>
                 <div class="stats-bar-item">
-                    <span class="val">25+</span>
-                    <span class="lbl">Koordinator Daerah</span>
+                    <span class="val">50+</span>
+                    <span class="lbl">Organization Partners</span>
                 </div>
             </div>
         </div>
@@ -85,30 +85,30 @@
     <section id="tentang">
         <div class="container">
             <div class="section-header">
-                <h2>Tentang KATUA Unand</h2>
+                <h2>About Us</h2>
                 <div class="divider"></div>
-                <p>Keluarga Alumni Teknik Universitas Andalas — wadah sinergi ribuan lulusan teknik lintas generasi.</p>
+                <p>A collaborative platform for thousands of members across generations towards a better future.</p>
             </div>
             <div class="feature-box">
                 <div class="feature-item">
                     <div class="feature-icon">🤝</div>
-                    <h4>Jejaring Alumni</h4>
-                    <p>Menghubungkan ribuan alumni dari 5 jurusan teknik di berbagai sektor profesional nasional.</p>
+                    <h4>Extensive Network</h4>
+                    <p>Connecting thousands of members from diverse backgrounds across professional sectors.</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">🎓</div>
-                    <h4>Mentoring Mahasiswa</h4>
-                    <p>Program pendampingan dan beasiswa untuk mendukung mahasiswa aktif Fakultas Teknik Unand.</p>
+                    <h4>Personal Development</h4>
+                    <p>Mentoring and enrichment programs to support member capacity building.</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">🏗️</div>
-                    <h4>Kontribusi Daerah</h4>
-                    <p>Aktif berkontribusi pada pembangunan Sumatera Barat melalui keahlian dan jaringan alumni.</p>
+                    <h4>Social Contribution</h4>
+                    <p>Actively contributing to community development through expertise and networking.</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">💡</div>
-                    <h4>Inovasi & Teknologi</h4>
-                    <p>Mendorong transformasi digital dalam tata kelola organisasi alumni yang modern dan efisien.</p>
+                    <h4>Innovation & Technology</h4>
+                    <p>Driving digital transformation for modern and efficient organizational governance.</p>
                 </div>
             </div>
         </div>
@@ -118,38 +118,15 @@
     <section id="kandidat" style="background: white;">
         <div class="container">
             <div class="section-header">
-                <h2>Kandidat Ketua Umum</h2>
+                <h2>General Election Candidates</h2>
                 <div class="divider"></div>
-                <p>Tiga kandidat terbaik siap memimpin KATUA Unand periode 2026–2029.</p>
+                <p>The best candidates ready to lead the organization in the upcoming period.</p>
             </div>
-            <div class="candidates-grid">
-                <div class="candidate-card">
-                    <img src="assets/img/candidate1.JPG" alt="Kandidat 1" class="candidate-img">
-                    <div class="candidate-info">
-                        <span class="candidate-tag">Kandidat 01</span>
-                        <h3 style="margin-top: 10px;">Dr. Ir. H. M. Jusuf Kalla</h3>
-                        <p style="color: var(--text-muted); font-size: 0.875rem;">Alumni Teknik Mesin 1980</p>
-                    </div>
-                </div>
-                <div class="candidate-card">
-                    <img src="assets/img/candidate2.JPG" alt="Kandidat 2" class="candidate-img">
-                    <div class="candidate-info">
-                        <span class="candidate-tag">Kandidat 02</span>
-                        <h3 style="margin-top: 10px;">Ir. Hj. Mulyani Sembiring</h3>
-                        <p style="color: var(--text-muted); font-size: 0.875rem;">Alumni Teknik Sipil 1985</p>
-                    </div>
-                </div>
-                <div class="candidate-card">
-                    <img src="assets/img/candidate3.JPG" alt="Kandidat 3" class="candidate-img">
-                    <div class="candidate-info">
-                        <span class="candidate-tag">Kandidat 03</span>
-                        <h3 style="margin-top: 10px;">Indra Satria, S.T., M.M.</h3>
-                        <p style="color: var(--text-muted); font-size: 0.875rem;">Alumni Teknik Industri 1995</p>
-                    </div>
-                </div>
+            <div class="candidates-grid" id="candidates-container">
+                <!-- Data kandidat diambil dari web_config.json -->
             </div>
             <div style="text-align: center; margin-top: 48px;">
-                <a href="#login" class="btn btn-primary"><i class="fas fa-vote-yea"></i> Login untuk Memilih</a>
+                <a href="#login" class="btn btn-primary"><i class="fas fa-vote-yea"></i> Login to Vote</a>
             </div>
         </div>
     </section>
@@ -158,7 +135,7 @@
     <section id="login" style="background: var(--bg-light);">
         <div class="container">
             <div class="section-header" style="margin-bottom: 40px;">
-                <h2>Masuk & Berikan Suaramu</h2>
+                <h2>Login & Cast Your Vote</h2>
                 <div class="divider"></div>
             </div>
             <div class="login-card">
@@ -167,7 +144,7 @@
                         <label for="username"><i class="fas fa-user" style="color: var(--primary);"></i>
                             Username</label>
                         <input type="text" id="username" name="username" class="form-control"
-                            placeholder="Contoh: fahmi" required>
+                            placeholder="Example: john" required>
                     </div>
                     <div class="form-group">
                         <label for="password"><i class="fas fa-lock" style="color: var(--primary);"></i>
@@ -177,14 +154,14 @@
                     </div>
                     <button type="submit" id="login-btn" class="btn btn-primary"
                         style="width: 100%; margin-top: 8px; justify-content: center;">
-                        <i class="fas fa-sign-in-alt"></i> Masuk Sekarang
+                        <i class="fas fa-sign-in-alt"></i> Login Now
                     </button>
                 </form>
                 <div
                     style="margin-top: 20px; background: var(--primary-light); border-radius: 10px; padding: 14px 18px; font-size: 0.85rem;">
-                    <strong>Petunjuk Login:</strong><br>
-                    Username: <code>[NIM Anda]</code><br>
-                    Password: <code>[nama_depan]@[Kode Unik]</code> (semua huruf kecil)
+                    <strong>Login Instructions:</strong><br>
+                    Username: <code>[Your ID]</code><br>
+                    Password: <code>[first_name]@[Unique Code]</code> (all lowercase)
                 </div>
             </div>
         </div>
@@ -194,10 +171,10 @@
     <section id="helpdesk" style="background: white;">
         <div class="container">
             <div class="section-header">
-                <h2>Tidak Terdaftar?</h2>
+                <h2>Not Registered?</h2>
                 <div class="divider"></div>
-                <p>Jika Anda alumni Fakultas Teknik Unand namun belum memiliki akun voting, isi form berikut untuk
-                    mendaftar.</p>
+                <p>If you are a legitimate member but do not have a voting account, please fill out the form below to
+                    register.</p>
             </div>
             <div class="login-card" style="max-width: 520px;">
 
@@ -206,58 +183,61 @@
                     style="display:none; background: var(--primary-light); border-radius: 12px; padding: 20px; margin-bottom: 24px; text-align: center;">
                     <i class="fas fa-envelope-circle-check"
                         style="font-size: 2rem; color: var(--primary); margin-bottom: 10px;"></i>
-                    <p style="font-weight: 600; color: var(--primary-dark);">Permintaan Diterima!</p>
-                    <p style="color: var(--text-muted); font-size: 0.875rem;">Kami akan menghubungi Anda melalui email
-                        setelah verifikasi data selesai dilakukan oleh panitia.</p>
+                    <p style="font-weight: 600; color: var(--primary-dark);">Request Received!</p>
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">We will contact you via email once data
+                        verification is complete.</p>
+                </div>
+
+                <!-- Error message (hidden by default) -->
+                <div id="helpdesk-error"
+                    style="display:none; background: #fee2e2; border-radius: 12px; padding: 20px; margin-bottom: 24px; text-align: center;">
+                    <i class="fas fa-exclamation-circle"
+                        style="font-size: 2rem; color: #ef4444; margin-bottom: 10px;"></i>
+                    <p style="font-weight: 600; color: #b91c1c;">Registration Failed</p>
+                    <p id="helpdesk-error-msg" style="color: #991b1b; font-size: 0.875rem; margin-top:5px;"></p>
                 </div>
 
                 <form id="helpdesk-form">
                     <div class="form-group">
-                        <label for="hd-nama"><i class="fas fa-user" style="color:var(--primary);"></i> Nama
-                            Lengkap</label>
-                        <input type="text" id="hd-nama" name="nama" class="form-control"
-                            placeholder="Nama sesuai ijazah" required>
+                        <label for="hd-fullName"><i class="fas fa-user" style="color:var(--primary);"></i> Full Name</label>
+                        <input type="text" id="hd-fullName" name="fullName" class="form-control"
+                            placeholder="Enter your full name" required>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                         <div class="form-group">
-                            <label for="hd-nim"><i class="fas fa-id-card" style="color:var(--primary);"></i> NIM</label>
-                            <input type="text" id="hd-nim" name="nim" class="form-control"
-                                placeholder="Contoh: 1710912001" required>
+                            <label for="hd-idNumber"><i class="fas fa-id-card" style="color:var(--primary);"></i> ID
+                                Number</label>
+                            <input type="text" id="hd-idNumber" name="idNumber" class="form-control"
+                                placeholder="E.g. 2110952001" required>
                         </div>
                         <div class="form-group">
-                            <label for="hd-angkatan"><i class="fas fa-calendar" style="color:var(--primary);"></i>
-                                Angkatan</label>
-                            <input type="number" id="hd-angkatan" name="angkatan" class="form-control"
-                                placeholder="Contoh: 2017" min="1950" max="2030" required>
+                            <label for="hd-batch"><i class="fas fa-calendar-alt" style="color:var(--primary);"></i>
+                                Batch</label>
+                            <input type="number" id="hd-batch" name="batch" class="form-control"
+                                placeholder="E.g. 2021" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="hd-jurusan"><i class="fas fa-graduation-cap" style="color:var(--primary);"></i>
-                            Jurusan</label>
-                        <select id="hd-jurusan" name="jurusan" class="form-control" required>
-                            <option value="" disabled selected>Pilih Jurusan</option>
-                            <option value="Teknik Elektro">Teknik Elektro</option>
-                            <option value="Teknik Mesin">Teknik Mesin</option>
-                            <option value="Sipil">Teknik Sipil</option>
-                            <option value="Lingkungan">Teknik Lingkungan</option>
-                            <option value="Industri">Teknik Industri</option>
-                            <option value="Arsitektur">Prodi Arsitektur</option>
-                        </select>
+                        <label for="hd-category"><i class="fas fa-sitemap" style="color:var(--primary);"></i>
+                            Category/Branch</label>
+                            <select id="hd-category" name="category" class="form-control" required>
+                                <option value="" disabled selected>Select Category</option>
+                            </select>
                     </div>
                     <div class="form-group">
-                        <label for="hd-email"><i class="fas fa-envelope" style="color:var(--primary);"></i> Email
-                            Aktif</label>
+                        <label for="hd-email"><i class="fas fa-envelope" style="color:var(--primary);"></i> Active
+                            Email</label>
                         <input type="email" id="hd-email" name="email" class="form-control"
-                            placeholder="email@contoh.com" required>
+                            placeholder="email@example.com" required>
                     </div>
                     <button type="submit" id="helpdesk-btn" class="btn btn-primary"
                         style="width:100%; justify-content:center; margin-top: 8px;">
-                        <i class="fas fa-paper-plane"></i> Kirim Permintaan
+                        <i class="fas fa-paper-plane"></i> Send Request
                     </button>
                 </form>
 
                 <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #f3f4f6; text-align: center;">
-                    <p style="font-size: 0.875rem; color: var(--text-muted);">Berkendala? Hubungi kami via WhatsApp</p>
+                    <p style="font-size: 0.875rem; color: var(--text-muted);">Having issues? Contact us via WhatsApp</p>
                     <a href="https://wa.me/6283800000000" target="_blank" class="btn"
                         style="margin-top: 10px; background: #25d366; color: white; gap: 8px;">
                         <i class="fab fa-whatsapp"></i> +62 838-0000-0000
@@ -269,17 +249,18 @@
 
     <footer>
         <div class="container">
-            <div class="logo" style="justify-content: center; margin-bottom: 20px; font-size: 1.5rem;">
-                KATUA Unand
+            <div class="logo" style="justify-content: center; margin-bottom: 20px; font-size: 1.5rem; align-items: center; display: flex;">
+                <img src="assets/img/logos.png" id="footer-logo-img" alt="Logo" style="height:40px;width:auto;margin-right:10px;">
+                <span id="footer-logo-text">Website Voting</span>
             </div>
             <div class="social-links">
-                <a href="https://www.instagram.com/dppkatua/" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
                 <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-x-twitter"></i></a>
                 <a href="#"><i class="fab fa-linkedin"></i></a>
             </div>
-            <p style="color: var(--text-muted); font-size: 0.875rem;">&copy; 2026 Keluarga Alumni Teknik Universitas
-                Andalas. All Rights Reserved.</p>
+            <p id="footer-text" style="color: var(--text-muted); font-size: 0.875rem;">&copy; 2026 Organisasi XYZ. All
+                Rights Reserved.</p>
         </div>
     </footer>
 

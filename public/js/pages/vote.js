@@ -20,7 +20,7 @@ const initVotePage = async () => {
 
     // Greeting
     const greetingEl = document.getElementById('user-greeting');
-    if (greetingEl) greetingEl.textContent = `Halo, ${user.fullName || user.username} 👋`;
+    if (greetingEl) greetingEl.textContent = `Hello, ${user.fullName || user.username} 👋`;
 
     // Voted banner
     if (user.has_voted) {
@@ -29,7 +29,13 @@ const initVotePage = async () => {
     }
 
     // Logout
-    document.getElementById('logout-btn')?.addEventListener('click', () => {
+    document.getElementById('logout-btn')?.addEventListener('click', async () => {
+        if (user.sessionToken) {
+            await apiFetch('/auth/logout', {
+                method: 'POST',
+                body: JSON.stringify({ sessionToken: user.sessionToken })
+            });
+        }
         localStorage.removeItem('user');
         window.location.href = 'index.html';
     });
@@ -38,7 +44,7 @@ const initVotePage = async () => {
     const renderChart = (candidates, voteCounts) => {
         const canvas = document.getElementById('resultsChart');
         if (!canvas) {
-            console.warn('Canvas "resultsChart" tidak ditemukan.');
+            console.warn('Canvas "resultsChart" not found.');
             return;
         }
 
@@ -51,7 +57,7 @@ const initVotePage = async () => {
 
         // Ensure Chart library is loaded
         if (typeof Chart === 'undefined') {
-            console.error('Chart.js belum dimuat.');
+            console.error('Chart.js not loaded.');
             return;
         }
 
@@ -88,7 +94,7 @@ const initVotePage = async () => {
                             label: (context) => {
                                 const total = context.dataset.data.reduce((a, b) => a + b, 0);
                                 const pct = total > 0 ? Math.round((context.parsed / total) * 100) : 0;
-                                return ` ${context.parsed} suara (${pct}%)`;
+                                return ` ${context.parsed} votes (${pct}%)`;
                             }
                         }
                     }
@@ -120,7 +126,7 @@ const initVotePage = async () => {
         if (stats) {
             const counterEl = document.getElementById('ui-counter');
             const progressBar = document.getElementById('progress-bar');
-            if (counterEl) counterEl.textContent = `${stats.totalVoted || 0} / ${stats.totalUsers || 0} telah voting (${stats.progressPercentage || 0}%)`;
+            if (counterEl) counterEl.textContent = `${stats.totalVoted || 0} / ${stats.totalUsers || 0} have voted (${stats.progressPercentage || 0}%)`;
             if (progressBar) progressBar.style.width = `${stats.progressPercentage || 0}%`;
             
             const totalUsersEl = document.getElementById('stat-total-users');
@@ -153,11 +159,11 @@ const initVotePage = async () => {
                 if (voting_open) {
                     toggleBtn.className = 'btn btn-danger';
                     toggleBtn.style.backgroundColor = '#ef4444';
-                    toggleBtn.innerHTML = '<i class="fas fa-lock"></i> Tutup Voting';
+                    toggleBtn.innerHTML = '<i class="fas fa-lock"></i> Close Voting';
                 } else {
                     toggleBtn.className = 'btn btn-primary';
                     toggleBtn.style.backgroundColor = 'var(--primary)';
-                    toggleBtn.innerHTML = '<i class="fas fa-unlock"></i> Buka Voting';
+                    toggleBtn.innerHTML = '<i class="fas fa-unlock"></i> Open Voting';
                 }
             }
         }
@@ -176,7 +182,7 @@ const initVotePage = async () => {
             });
 
             if (res.success) {
-                showToast('Vote berhasil dicatat!');
+                showToast('Vote successfully recorded!');
                 user.has_voted = true;
                 user.vote = id;
                 localStorage.setItem('user', JSON.stringify(user));
@@ -189,7 +195,7 @@ const initVotePage = async () => {
                 showToast(res.message, 'error');
             }
         } catch (error) {
-            showToast('Gagal mengirim suara', 'error');
+            showToast('Failed to cast vote', 'error');
         }
     };
 

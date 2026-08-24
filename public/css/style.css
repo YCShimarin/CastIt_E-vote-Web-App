@@ -820,7 +820,8 @@ html.dark-mode .pending-table th {
 }
 
 html.dark-mode .pending-table td,
-html.dark-mode .audit-item {
+html.dark-mode .audit-item,
+html.dark-mode #audit-log-container {
     border-color: #374151;
 }
 
