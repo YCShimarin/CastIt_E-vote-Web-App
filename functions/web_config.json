@@ -81,6 +81,13 @@
         "password": "123",
         "role": "verificator",
         "category": "Category C"
+      },
+      {
+        "id": "admin4",
+        "username": "admin4",
+        "password": "123",
+        "role": "verificator",
+        "category": "Category D"
       }
     ]
   },

@@ -7,6 +7,8 @@ const { vote } = require('./routes/vote');
 const { getResults } = require('./routes/results');
 const { submitHelpdesk } = require('./routes/helpdesk');
 const { getStatus, toggleVoting, doAdminAction, getUsersList } = require('./routes/admin');
+const { submitFeedback, getMyFeedbacks, getAdminFeedbacks, replyFeedback } = require('./routes/feedback');
+const { getQueueStatus } = require('./services/voteQueue');
 
 dotenv.config();
 
@@ -67,6 +69,10 @@ app.post('/admin/action', doAdminAction);
 app.get('/admin/queue', (req, res) => {
     res.json({ success: true, message: 'Queue status', data: getQueueStatus() });
 });
+app.post('/feedback/submit', submitFeedback);
+app.get('/feedback/my', getMyFeedbacks);
+app.get('/admin/feedback', getAdminFeedbacks);
+app.post('/admin/feedback/reply', replyFeedback);
 
 // 404 Handler (Ensure we always return JSON instead of HTML)
 app.use((req, res) => {

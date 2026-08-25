@@ -1,81 +1,80 @@
-# 🗳️ CastIt - Premium E-Voting System
+# CastIt - Online E-Voting System Template
 
-Welcome to **CastIt**! This complete and secure electronic voting solution includes a modern voter frontend, a comprehensive admin dashboard, real-time analytics, and bulletproof data handling out of the box.
+Welcome to **CastIt**, a fast, modern, and easily deployable online e-voting system template. Perfect for organizational elections, student councils (BEM), or community polling.
 
-## 🌟 Key Features
-- **Premium UI/UX:** Built with modern design principles (Glassmorphism, Dark/Light modes).
-- **Comprehensive Admin Panel:** Manage users, verify registrants, and control voting status.
-- **Enterprise Security:**
-  - **Single-Device Login:** Prevents multiple concurrent logins using a secure Session & Heartbeat system.
-  - **Anti-Spam Registration:** Validates double registrations (ID/Email) in real-time.
-  - **Audit Logs:** Tracks every critical admin action.
-- **Real-Time Analytics:** Interactive Doughnut chart for live vote counting.
-- **Easy Customization:** Edit one `web_config.json` file to change logos, candidates, and website details instantly.
+## ✨ Key Features
 
----
-
-## 🚀 Installation Guide
-
-### Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) (v16 or higher) installed on your system.
-
-### 1. Extract the Files
-Extract the downloaded `.zip` file into your desired folder.
-
-### 2. Install Dependencies
-Open your terminal/command prompt, navigate to the `functions` folder, and run:
-```bash
-cd functions
-npm install
-```
-
-### 3. Start the Server
-Start the backend server using the following command:
-```bash
-npm run dev
-```
-You should see a message in the terminal saying:
-```text
-=================================
-  VOTING SERVER IS RUNNING
-  Port: 3000
-=================================
-```
-
-### 4. Access the Website
-Open your browser and visit:
-- **Voter Portal:** `http://localhost:3000/`
-- **Admin Dashboard:** `http://localhost:3000/admin.html`
+* **Modern & Responsive UI:** Elegant, mobile-friendly interface with modern micro-animations.
+* **Hassle-free Database System:** Uses **NeDB** (embedded NoSQL). Data is automatically stored in local `.db` files. No MySQL or MongoDB setup required.
+* **Role-Based Access Control:** Features **Super Admin** (full access) and **Admin Verificator** (limited access restricted to specific departments/categories).
+* **Live Vote Standings:** Real-time vote tally visualization using Pie Charts (Chart.js).
+* **Helpdesk & Feedback System:** Voters can send questions or issues directly to admins, who can reply in real-time.
+* **Export to Excel:** Export voting results and voter data to `.xlsx` files with a single click.
+* **Security System:** Queue validation to prevent double-voting, and session limits (prevents login on multiple devices simultaneously).
+* **Factory Reset:** A dedicated button to wipe the entire database clean with one click when you are ready to go live.
 
 ---
 
-## 🛠️ Configuration & Setup
+## 🛠️ Tech Stack
 
-### Changing Website Identity & Candidates
-You don't need to touch the code to update the website's content. Simply open the `web_config.json` file (located inside the `functions` folder). 
-Here you can easily edit:
-- Website Name, Title, and Description
-- Admin & Verificator accounts
-- List of Candidates (Names, Visions, Missions, and Image paths)
-
-### Default Admin Login
-To access the admin panel for the first time, use the credentials specified in your `web_config.json`. By default:
-- **Username:** `admin1`
-- **Password:** `password123`
-
-*(Note: Always change these default credentials before going live!)*
+* **Frontend:** HTML5, Vanilla CSS3 (Custom Variables), Vanilla JavaScript (ES6 Modules)
+* **Backend:** Node.js, Express.js
+* **Database:** NeDB (Node Embedded Database)
+* **Additional Libraries:** Chart.js (Charts), SheetJS (Excel Export), FontAwesome (Icons)
 
 ---
 
-## 📂 Project Structure
-- `/public`: Contains all frontend assets (HTML, CSS, JS, Images).
-- `/functions`: Contains the Node.js backend server.
-- `/functions/web_config.json`: The brain of your UI configuration and admin credentials.
-- `/functions/data`: The local NeDB databases where user data, logs, and votes are securely stored.
+## 🚀 Installation & Setup
+
+1. Ensure **Node.js** is installed on your computer.
+2. Open your terminal/Command Prompt and navigate to the `functions/` directory.
+3. Install all dependencies:
+   ```bash
+   npm install
+   ```
+4. Once the installation is complete, start the server:
+   ```bash
+   npm run dev
+   ```
+   *(Or use `npm start` if running in a production environment)*
+5. Open your browser and go to: **`http://localhost:3000`**
 
 ---
 
-## 📝 License
-By purchasing this template, you are granted a license to use this software in accordance with the terms provided on your Lemon Squeezy receipt. 
+## 🔐 Default Credentials (Dummy Data)
 
-Thank you for your purchase! If you encounter any issues, please refer to our support portal.
+Use the following accounts to explore the features inside the application.
+
+### Admin Accounts
+| Role | Username | Password | Description |
+| :--- | :--- | :--- | :--- |
+| **Super Admin** | `admin` | `LeMineralAdaManisManisnya` | Full access to all settings |
+| **Verificator 1** | `admin1` | `password123` | Manages users in Category 1 |
+| **Verificator 2** | `admin2` | `password456` | Manages users in Category 2 |
+
+### Dummy Voter Accounts
+There are 10 dummy voter accounts registered. You can log in using any of the usernames below with the **Password:** `password123`
+* `jsmith` (Has already voted)
+* `ejohnson`
+* `mbrown`
+* `jwilliams`
+* `djones`
+* And more...
+
+---
+
+## ⚠️ Production Preparation (Very Important)
+
+This template comes with **dummy data** pre-installed so you can see what the system looks like out-of-the-box (e.g., pre-filled charts and user tables).
+
+**IF YOU ARE READY TO USE THIS FOR A REAL ELECTION:**
+1. Log in using the **Super Admin** account.
+2. Navigate to the **Admin Panel**.
+3. Scroll down to the **⚡ Quick Actions** section.
+4. Click the red **Factory Reset** button.
+5. Type `RESET` in the prompt dialog that appears.
+6. The system will automatically delete *all* dummy users, voting history, feedbacks, and log records.
+7. The system is now **100% clean** and ready to be used for your real election!
+
+---
+*Built to facilitate efficient and transparent digital democracy.*

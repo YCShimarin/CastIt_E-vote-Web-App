@@ -162,8 +162,11 @@
                     <button class="btn btn-outline" id="btn-force-sync">
                         <i class="fas fa-sync" style="color: #f59e0b;"></i> Force Sync
                     </button>
-                    <button class="btn btn-outline" id="btn-reset-data" style="color: #ef4444; border-color: #fecaca;">
-                        <i class="fas fa-trash-alt"></i> Reset Data
+                    <button class="btn btn-outline" id="btn-reset-data">
+                        <i class="fas fa-undo-alt" style="color: #3b82f6;"></i> Reset Votes
+                    </button>
+                    <button class="btn btn-outline" id="btn-factory-reset" style="color: #ef4444; border-color: #fecaca;">
+                        <i class="fas fa-skull-crossbones"></i> Factory Reset
                     </button>
                 </div>
         </div>
@@ -291,6 +294,35 @@
                 </div>
             </div>
         </div>
+        </div>
+        
+        <!-- FEEDBACK MANAGEMENT -->
+        <div id="section-feedback" style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-top: 36px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 24px;">
+                <h2 style="margin:0; font-size: 1.2rem;">💬 Feedback Management</h2>
+                <button class="btn btn-outline" id="btn-export-feedback" style="border-color: #10b981; color: #10b981; margin: 0;">
+                    <i class="fas fa-file-excel"></i> Export to Excel
+                </button>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="pending-table" id="feedback-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Voter Name</th>
+                            <th>Category</th>
+                            <th>Message</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="feedback-list-container">
+                        <tr><td colspan="6" style="text-align:center; padding: 30px; color: var(--text-muted);">Loading feedback data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div id="toast" class="toast"></div>
@@ -352,6 +384,30 @@
                 </div>
                 <div style="margin-top: 20px; display: flex; gap: 10px;">
                     <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;">Save Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL FEEDBACK REPLY -->
+    <div class="modal" id="feedback-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin:0; font-size:1.2rem;">Reply to Feedback</h2>
+                <button class="close-modal" id="close-feedback-modal" style="position:static;"><i class="fas fa-times"></i></button>
+            </div>
+            <div style="background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                <p id="modal-feedback-voter" style="margin: 0 0 5px 0; font-size: 0.85rem; color: var(--text-muted);"></p>
+                <p id="modal-feedback-message" style="margin: 0; font-size: 0.95rem; color: var(--text-dark); font-weight: 500;"></p>
+            </div>
+            <form id="feedback-reply-form">
+                <input type="hidden" id="reply-feedback-id">
+                <div class="form-group">
+                    <label>Your Reply</label>
+                    <textarea id="feedback-reply-text" class="form-control" rows="4" placeholder="Type your reply here..." required style="resize: vertical;"></textarea>
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;"><i class="fas fa-paper-plane"></i> Send Reply</button>
                 </div>
             </form>
         </div>

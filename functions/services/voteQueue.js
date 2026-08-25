@@ -5,7 +5,7 @@
  * Now using NeDB for persistence.
  */
 
-const { db } = require('./dataService');
+const { db, readCandidates } = require('./dataService');
 
 let queue = [];
 let isProcessing = false;
@@ -45,7 +45,8 @@ const processQueue = async () => {
         if (!user) throw new Error('User not found');
         if (user.has_voted) throw new Error('Anda sudah memilih sebelumnya');
 
-        const candidate = await db.candidates.findOne({ id: entry.pilihan });
+        const candidates = await readCandidates();
+        const candidate = candidates.find(c => c.id === entry.pilihan);
         if (!candidate) throw new Error('Kandidat tidak valid');
 
         // Atomic update in NeDB

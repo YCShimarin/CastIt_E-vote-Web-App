@@ -1,21 +1,8 @@
-const { readSettings, writeSettings, readPending, writePending, readUsers, writeUsers, getUserByUsername, writeLog, readLogs } = require('../services/dataService');
+const { readSettings, writeSettings, readPending, writePending, readUsers, writeUsers, getUserByUsername, writeLog, readLogs, getAdmin } = require('../services/dataService');
 const { sendResponse } = require('../utils/responseHandler');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
-
-/**
- * Helper to check admin role and jurusan
- */
-const getAdmin = async (username) => {
-    if (!username) return null;
-    const user = await getUserByUsername(username);
-    if (!user) return null;
-    if (user.role === 'admin' || user.role === 'admin_verificator') {
-        return user;
-    }
-    return null;
-};
 
 /**
  * GET /admin/status
@@ -34,8 +21,8 @@ const getStatus = async (req, res) => {
         let pending = await readPending();
         
         // Filter pending users if admin is a verificator
-        if (admin.role === 'admin_verificator' && admin.jurusan) {
-            pending = pending.filter(p => p.jurusan === admin.jurusan);
+        if (admin.role === 'admin_verificator' && admin.category) {
+            pending = pending.filter(p => p.category === admin.category);
         }
 
         // Ambil data statistik dari users.json
@@ -51,9 +38,9 @@ const getStatus = async (req, res) => {
             pending_count: pending.length,
             pending_users: pending,
             admin: {
-                nama: admin.nama,
+                fullName: admin.fullName,
                 role: admin.role,
-                jurusan: admin.jurusan
+                category: admin.category
             },
             stats: {
                 totalUsers,
@@ -173,6 +160,23 @@ const doAdminAction = async (req, res) => {
             await writeUsers(resetUsers);
             await writeLog(admin.username, `RESET all voting data`);
             return sendResponse(res, true, 'Database voting telah dikosongkan.');
+        }
+
+        if (action === 'factory_reset') {
+            if (admin.role !== 'admin') return sendResponse(res, false, 'Unauthorized', {}, 403);
+            const { db } = require('../services/dataService');
+            
+            // Remove all documents from collections
+            await db.users.remove({}, { multi: true });
+            await db.feedbacks.remove({}, { multi: true });
+            await db.pending.remove({}, { multi: true });
+            await db.logs.remove({}, { multi: true });
+            await db.sessions.remove({}, { multi: true });
+            
+            // Log this specific action so the log is not completely empty
+            await db.logs.insert({ user: admin.username, action: 'SYSTEM FACTORY RESET', time: new Date().toISOString() });
+
+            return sendResponse(res, true, 'Factory reset berhasil. Semua data telah dikosongkan.');
         }
 
         if (action === 'force_sync') {

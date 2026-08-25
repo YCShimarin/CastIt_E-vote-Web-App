@@ -23,7 +23,7 @@ const submitHelpdesk = async (req, res) => {
         }
 
         // Cek duplikat ID Number atau Email di antrean pendaftaran (pending_users.db)
-        const pendingExists = await db.pending_users.findOne({ $or: [{ idNumber }, { email }] });
+        const pendingExists = await db.pending.findOne({ $or: [{ idNumber }, { email }] });
         if (pendingExists) {
             if (pendingExists.idNumber === idNumber) {
                 return sendResponse(res, false, 'Your ID Number is currently in the verification queue.', {}, 400);
@@ -44,7 +44,7 @@ const submitHelpdesk = async (req, res) => {
             created_at: new Date().toISOString()
         };
 
-        await db.pending_users.insert(newEntry);
+        await db.pending.insert(newEntry);
 
         return sendResponse(res, true, 'Your registration has been submitted. We will contact you via email once verification is complete.', { id: newEntry.id });
     } catch (error) {

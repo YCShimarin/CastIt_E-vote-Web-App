@@ -208,8 +208,82 @@ const initVotePage = async () => {
         }
     };
 
+    // --- FEEDBACK LOGIC ---
+    const feedbackForm = document.getElementById('feedback-form');
+    const feedbackListContainer = document.getElementById('feedback-list-container');
+
+    const loadFeedbacks = async () => {
+        try {
+            const res = await apiFetch(`/feedback/my?username=${user.username}`);
+            if (res && res.success) {
+                renderFeedbacks(res.data);
+            }
+        } catch (error) {
+            console.error('Error loading feedbacks:', error);
+        }
+    };
+
+    const renderFeedbacks = (feedbacks) => {
+        if (!feedbackListContainer) return;
+        if (!feedbacks || feedbacks.length === 0) {
+            feedbackListContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">You have not submitted any feedback yet.</p>';
+            return;
+        }
+
+        feedbackListContainer.innerHTML = feedbacks.map(f => `
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-weight: 600; font-size: 0.95rem;">${new Date(f.createdAt).toLocaleString()}</span>
+                    <span style="font-size: 0.8rem; padding: 2px 8px; border-radius: 999px; background: ${f.status === 'replied' ? '#dcfce7' : '#fef3c7'}; color: ${f.status === 'replied' ? '#166534' : '#92400e'};">${f.status === 'replied' ? 'Replied' : 'Pending'}</span>
+                </div>
+                <p style="margin: 0; font-size: 0.9rem; color: var(--text-dark);">${f.message}</p>
+                ${f.reply ? `
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1;">
+                    <strong style="font-size: 0.85rem; color: var(--primary);">Reply from ${f.repliedBy || 'Admin'}:</strong>
+                    <p style="margin: 4px 0 0 0; font-size: 0.9rem; color: var(--text-dark);">${f.reply}</p>
+                </div>
+                ` : ''}
+            </div>
+        `).join('');
+    };
+
+    if (feedbackForm) {
+        feedbackForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const messageInput = document.getElementById('feedback-message');
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            const submitBtn = feedbackForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+
+            try {
+                const res = await apiFetch('/feedback/submit', {
+                    method: 'POST',
+                    body: JSON.stringify({ username: user.username, message })
+                });
+
+                if (res && res.success) {
+                    showToast('Feedback submitted successfully!');
+                    messageInput.value = '';
+                    loadFeedbacks(); // Reload list
+                } else {
+                    showToast(res.message || 'Failed to submit feedback', 'error');
+                }
+            } catch (err) {
+                showToast('An error occurred', 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    }
+
     // Initial load
     fetchData();
+    if (feedbackListContainer) loadFeedbacks();
 
     // Auto-refresh stats every 30 seconds (optional)
     // setInterval(fetchData, 30000);

@@ -10,7 +10,8 @@ const db = {
     pending: Datastore.create({ filename: path.join(DATA_DIR, 'pending_users.db'), autoload: true }),
     settings: Datastore.create({ filename: path.join(DATA_DIR, 'settings.db'), autoload: true }),
     logs: Datastore.create({ filename: path.join(DATA_DIR, 'logs.db'), autoload: true }),
-    sessions: Datastore.create({ filename: path.join(DATA_DIR, 'sessions.db'), autoload: true })
+    sessions: Datastore.create({ filename: path.join(DATA_DIR, 'sessions.db'), autoload: true }),
+    feedbacks: Datastore.create({ filename: path.join(DATA_DIR, 'feedbacks.db'), autoload: true })
 };
 
 // Indexing for performance
@@ -51,6 +52,7 @@ const readCandidates = async () => {
         return config.candidates.list.map(c => ({
             id: `kandidat_${c.id}`,
             fullName: c.name,
+            nama: c.name,
             deskripsi: c.description,
             foto: c.image_path,
             visi: c.visi || 'Visi belum tersedia di konfigurasi.',
@@ -88,12 +90,20 @@ const getUserByUsername = async (username) => {
         if (config.admin && config.admin.accounts) {
             const adminAcc = config.admin.accounts.find(a => a.username.toLowerCase() === username.toLowerCase());
             if (adminAcc) {
+                let cat = adminAcc.category;
+                if (adminAcc.role === 'verificator') {
+                    const verificators = config.admin.accounts.filter(a => a.role === 'verificator');
+                    const index = verificators.findIndex(a => a.username.toLowerCase() === username.toLowerCase());
+                    if (index !== -1 && config.categories && config.categories[index]) {
+                        cat = config.categories[index];
+                    }
+                }
                 return {
                     username: adminAcc.username,
                     password: adminAcc.password,
                     fullName: adminAcc.username,
                     role: adminAcc.role === 'verificator' ? 'admin_verificator' : 'admin',
-                    category: adminAcc.category
+                    category: cat
                 };
             }
         }
@@ -103,12 +113,22 @@ const getUserByUsername = async (username) => {
     return db.users.findOne({ username: new RegExp(`^${username}$`, 'i') });
 };
 
+const getAdmin = async (username) => {
+    if (!username) return null;
+    const user = await getUserByUsername(username);
+    if (!user) return null;
+    if (user.role === 'admin' || user.role === 'admin_verificator') {
+        return user;
+    }
+    return null;
+};
+
 module.exports = {
     db, // Export raw db for advanced queries
     readUsers, writeUsers,
     readCandidates,
     readPending, writePending,
     readSettings, writeSettings,
-    getUserByUsername,
+    getUserByUsername, getAdmin,
     writeLog, readLogs
 };

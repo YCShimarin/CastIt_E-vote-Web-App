@@ -157,6 +157,27 @@ const initAdminPage = async () => {
         };
     }
 
+    const factoryResetBtn = document.getElementById('btn-factory-reset');
+    if (factoryResetBtn) {
+        factoryResetBtn.onclick = async () => {
+            if (confirm('🔥 DANGER: This will delete ALL users, feedbacks, and logs! Are you absolutely sure you want to Factory Reset?')) {
+                const promptConfirm = prompt('Type "RESET" to confirm factory reset:');
+                if (promptConfirm === 'RESET') {
+                    const res = await apiFetch('/admin/action', { method: 'POST', body: JSON.stringify({ action: 'factory_reset', username: user.username }) });
+                    if (res && res.success) {
+                        alert('Factory Reset Complete. The system is now completely empty.');
+                        loadAdminData();
+                        showToast('Factory Reset Complete');
+                    } else {
+                        showToast(res.message || 'Factory Reset failed', 'error');
+                    }
+                } else {
+                    showToast('Factory Reset cancelled', 'error');
+                }
+            }
+        };
+    }
+
     // Voting Toggle
     if (toggleBtn) {
         toggleBtn.onclick = async () => {
@@ -550,9 +571,132 @@ const initAdminPage = async () => {
         }
     };
 
+    // --- FEEDBACK MANAGEMENT & EXCEL EXPORT ---
+    const loadFeedbackList = async () => {
+        const tableBody = document.getElementById('feedback-list-container');
+        if (!tableBody) return;
+
+        try {
+            const res = await fetch('/admin/feedback', {
+                headers: { 'x-admin-username': user.username }
+            });
+            const json = await res.json();
+            
+            if (json.success) {
+                // Save globally for export
+                window.allFeedbacks = json.data;
+
+                if (json.data.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 30px; color: var(--text-muted);">No feedback found.</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = json.data.map(f => `
+                    <tr>
+                        <td>${new Date(f.createdAt).toLocaleString()}</td>
+                        <td><strong>${f.fullName}</strong></td>
+                        <td>${f.category}</td>
+                        <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${f.message}">${f.message}</td>
+                        <td>
+                            <span style="padding: 2px 8px; border-radius: 999px; font-size: 0.8rem; background: ${f.status === 'replied' ? '#dcfce7' : '#fef3c7'}; color: ${f.status === 'replied' ? '#166534' : '#92400e'};">
+                                ${f.status === 'replied' ? 'Replied' : 'Pending'}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm-approve" onclick="openReplyModal('${f._id}')" ${f.status === 'replied' ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
+                                <i class="fas fa-reply"></i> Reply
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        } catch (e) {
+            console.error('Error loading feedbacks:', e);
+        }
+    };
+
+    // Modal Logic
+    const feedbackModal = document.getElementById('feedback-modal');
+    window.openReplyModal = (id) => {
+        const feedback = window.allFeedbacks.find(f => f._id === id);
+        if (!feedback) return;
+
+        document.getElementById('reply-feedback-id').value = id;
+        document.getElementById('modal-feedback-voter').textContent = `From: ${feedback.fullName} (${feedback.category})`;
+        document.getElementById('modal-feedback-message').textContent = feedback.message;
+        document.getElementById('feedback-reply-text').value = '';
+        
+        feedbackModal.style.display = 'flex';
+    };
+
+    const closeFeedbackBtn = document.getElementById('close-feedback-modal');
+    if (closeFeedbackBtn) {
+        closeFeedbackBtn.onclick = (e) => {
+            e.preventDefault();
+            feedbackModal.style.display = 'none';
+        };
+    }
+
+    const replyForm = document.getElementById('feedback-reply-form');
+    if (replyForm) {
+        replyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('reply-feedback-id').value;
+            const replyMsg = document.getElementById('feedback-reply-text').value;
+
+            const res = await apiFetch('/admin/feedback/reply', {
+                method: 'POST',
+                headers: { 'x-admin-username': user.username },
+                body: JSON.stringify({ feedbackId: id, replyMessage: replyMsg })
+            });
+
+            if (res && res.success) {
+                showToast('Reply sent successfully!');
+                feedbackModal.style.display = 'none';
+                loadFeedbackList();
+            } else {
+                showToast(res.message || 'Failed to send reply', 'error');
+            }
+        });
+    }
+
+    // Export to Excel Logic (using SheetJS from CDN)
+    const exportFeedbackBtn = document.getElementById('btn-export-feedback');
+    if (exportFeedbackBtn) {
+        exportFeedbackBtn.onclick = () => {
+            if (!window.allFeedbacks || window.allFeedbacks.length === 0) {
+                showToast('No data to export', 'error');
+                return;
+            }
+
+            // Format data for Excel
+            const excelData = window.allFeedbacks.map(f => ({
+                'Date Submitted': new Date(f.createdAt).toLocaleString(),
+                'Voter Name': f.fullName,
+                'Voter Category': f.category,
+                'Voter Username': f.userId,
+                'Feedback Message': f.message,
+                'Status': f.status,
+                'Admin Reply': f.reply || '',
+                'Replied By': f.repliedBy || '',
+                'Reply Date': f.repliedAt ? new Date(f.repliedAt).toLocaleString() : ''
+            }));
+
+            // Create Worksheet
+            const ws = XLSX.utils.json_to_sheet(excelData);
+            // Create Workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "FeedbackData");
+
+            // Generate Excel file and trigger download
+            XLSX.writeFile(wb, `Voting_Feedback_${new Date().toISOString().slice(0,10)}.xlsx`);
+        };
+    }
+
     loadAdminData();
     loadUserManagement();
     loadWebConfig();
+    loadFeedbackList();
 };
 
 document.addEventListener('DOMContentLoaded', initAdminPage);

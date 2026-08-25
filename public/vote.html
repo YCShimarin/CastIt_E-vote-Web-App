@@ -117,6 +117,32 @@
                 <div style="position: relative; height: 250px; width: 100%;">
                     <canvas id="resultsChart"></canvas>
                 </div>
+        </div>
+    </div>
+
+    <!-- FEEDBACK SECTION -->
+    <div class="container" style="padding-bottom: 80px;">
+        <hr style="margin: 20px 0 60px 0; border: none; border-top: 1px solid #e5e7eb;">
+        <h2 style="margin-bottom: 28px; font-size: 1.4rem;">💬 Suggestions & Feedback</h2>
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; align-items: start;">
+            <!-- Feedback Form -->
+            <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: var(--shadow);">
+                <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 1.1rem;">Submit Feedback</h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Send your suggestions or issues directly to the administration.</p>
+                <form id="feedback-form">
+                    <div class="form-group">
+                        <textarea id="feedback-message" class="form-control" rows="4" placeholder="Type your message here..." required style="resize: vertical;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fas fa-paper-plane"></i> Send Feedback</button>
+                </form>
+            </div>
+            
+            <!-- Feedback List -->
+            <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: var(--shadow);">
+                <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 1.1rem;">My Feedback History</h3>
+                <div id="feedback-list-container" style="max-height: 400px; overflow-y: auto;">
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Loading feedbacks...</p>
+                </div>
             </div>
         </div>
     </div>
