@@ -74,9 +74,13 @@ app.get('/feedback/my', getMyFeedbacks);
 app.get('/admin/feedback', getAdminFeedbacks);
 app.post('/admin/feedback/reply', replyFeedback);
 
-// 404 Handler (Ensure we always return JSON instead of HTML)
+// 404 Handler (Send HTML for browser, JSON for API)
 app.use((req, res) => {
-    res.status(404).json({ success: false, message: `Endpoint ${req.method} ${req.url} tidak ditemukan`, data: {} });
+    if (req.accepts('html')) {
+        res.status(404).sendFile(path.join(__dirname, '../public/404.html'));
+    } else {
+        res.status(404).json({ success: false, message: `Endpoint ${req.method} ${req.url} tidak ditemukan`, data: {} });
+    }
 });
 
 // Error Handler

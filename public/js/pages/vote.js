@@ -285,6 +285,20 @@ const initVotePage = async () => {
     fetchData();
     if (feedbackListContainer) loadFeedbacks();
 
+    // Hamburger Menu Logic
+    const hamburgerMenu = document.getElementById('hamburger-menu');
+    const navLinks = document.getElementById('nav-links');
+    if (hamburgerMenu && navLinks) {
+        hamburgerMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        navLinks.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+    }
+
     // Auto-refresh stats every 30 seconds (optional)
     // setInterval(fetchData, 30000);
 };

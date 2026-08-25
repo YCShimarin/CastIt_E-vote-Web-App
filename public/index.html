@@ -21,8 +21,11 @@
     <nav>
         <div class="container nav-content">
             <a href="index.html" class="logo"><img src="assets/img/logos.png" id="nav-logo" alt="Logo"
-                    style="height:30px;width:auto;vertical-align:middle;"> <span id="nav-title">KATUA Unand</span></a>
-            <div class="nav-links">
+                    style="height:30px;width:auto;vertical-align:middle;"> <span id="nav-title">CastIt</span></a>
+            <button class="hamburger" id="hamburger-menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links" id="nav-links">
                 <a href="#tentang">About</a>
                 <a href="#kandidat">Candidates</a>
                 <a href="vote.html" class="btn btn-primary" id="nav-dashboard-btn" style="display:none;">Voting
@@ -199,7 +202,8 @@
 
                 <form id="helpdesk-form">
                     <div class="form-group">
-                        <label for="hd-fullName"><i class="fas fa-user" style="color:var(--primary);"></i> Full Name</label>
+                        <label for="hd-fullName"><i class="fas fa-user" style="color:var(--primary);"></i> Full
+                            Name</label>
                         <input type="text" id="hd-fullName" name="fullName" class="form-control"
                             placeholder="Enter your full name" required>
                     </div>
@@ -213,16 +217,16 @@
                         <div class="form-group">
                             <label for="hd-batch"><i class="fas fa-calendar-alt" style="color:var(--primary);"></i>
                                 Batch</label>
-                            <input type="number" id="hd-batch" name="batch" class="form-control"
-                                placeholder="E.g. 2021" required>
+                            <input type="number" id="hd-batch" name="batch" class="form-control" placeholder="E.g. 2021"
+                                required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="hd-category"><i class="fas fa-sitemap" style="color:var(--primary);"></i>
                             Category/Branch</label>
-                            <select id="hd-category" name="category" class="form-control" required>
-                                <option value="" disabled selected>Select Category</option>
-                            </select>
+                        <select id="hd-category" name="category" class="form-control" required>
+                            <option value="" disabled selected>Select Category</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="hd-email"><i class="fas fa-envelope" style="color:var(--primary);"></i> Active
@@ -249,8 +253,10 @@
 
     <footer>
         <div class="container">
-            <div class="logo" style="justify-content: center; margin-bottom: 20px; font-size: 1.5rem; align-items: center; display: flex;">
-                <img src="assets/img/logos.png" id="footer-logo-img" alt="Logo" style="height:40px;width:auto;margin-right:10px;">
+            <div class="logo"
+                style="justify-content: center; margin-bottom: 20px; font-size: 1.5rem; align-items: center; display: flex;">
+                <img src="assets/img/logos.png" id="footer-logo-img" alt="Logo"
+                    style="height:40px;width:auto;margin-right:10px;">
                 <span id="footer-logo-text">Website Voting</span>
             </div>
             <div class="social-links">

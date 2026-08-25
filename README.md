@@ -2,7 +2,7 @@
 
 Welcome to **CastIt**, a fast, modern, and easily deployable online e-voting system template. Perfect for organizational elections, student councils (BEM), or community polling.
 
-## ✨ Key Features
+## Key Features
 
 * **Modern & Responsive UI:** Elegant, mobile-friendly interface with modern micro-animations.
 * **Hassle-free Database System:** Uses **NeDB** (embedded NoSQL). Data is automatically stored in local `.db` files. No MySQL or MongoDB setup required.
@@ -15,7 +15,7 @@ Welcome to **CastIt**, a fast, modern, and easily deployable online e-voting sys
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Frontend:** HTML5, Vanilla CSS3 (Custom Variables), Vanilla JavaScript (ES6 Modules)
 * **Backend:** Node.js, Express.js
@@ -24,7 +24,7 @@ Welcome to **CastIt**, a fast, modern, and easily deployable online e-voting sys
 
 ---
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 1. Ensure **Node.js** is installed on your computer.
 2. Open your terminal/Command Prompt and navigate to the `functions/` directory.
@@ -41,7 +41,7 @@ Welcome to **CastIt**, a fast, modern, and easily deployable online e-voting sys
 
 ---
 
-## 🔐 Default Credentials (Dummy Data)
+## Default Credentials (Dummy Data)
 
 Use the following accounts to explore the features inside the application.
 
@@ -63,14 +63,14 @@ There are 10 dummy voter accounts registered. You can log in using any of the us
 
 ---
 
-## ⚠️ Production Preparation (Very Important)
+## Production Preparation (Very Important)
 
 This template comes with **dummy data** pre-installed so you can see what the system looks like out-of-the-box (e.g., pre-filled charts and user tables).
 
 **IF YOU ARE READY TO USE THIS FOR A REAL ELECTION:**
 1. Log in using the **Super Admin** account.
 2. Navigate to the **Admin Panel**.
-3. Scroll down to the **⚡ Quick Actions** section.
+3. Scroll down to the **Quick Actions** section.
 4. Click the red **Factory Reset** button.
 5. Type `RESET` in the prompt dialog that appears.
 6. The system will automatically delete *all* dummy users, voting history, feedbacks, and log records.

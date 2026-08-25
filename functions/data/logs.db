@@ -20,11 +20,14 @@
 {"user":"admin","action":"Replied to feedback from Annisa cinta ramadhani","time":"2026-08-25T05:47:04.911Z","_id":"jSneIRxxXqbSjKmg"}
 {"user":"admin","action":"Deleted user with ID 5OQMppFfLpIKmvT3","time":"2026-08-24T13:26:14.630Z","_id":"jrPA8bc1rRwTlvt9"}
 {"user":"admin","action":"Updated data for user siti","time":"2026-08-24T13:25:18.502Z","_id":"mFXvoXMfATbj6lAD"}
+{"user":"admin","action":"Approved registration for user Albert Spelllknight (21209991)","time":"2026-08-25T08:01:54.334Z","_id":"myPTmSUynxmzL7EU"}
+{"user":"admin","action":"Changed voting status to: OPEN","time":"2026-08-25T08:17:04.647Z","_id":"n8H9AcZutbW2RpqA"}
 {"user":"admin","action":"Rejected registration for user dsadadsa (2110952005)","time":"2026-08-24T10:40:28.693Z","_id":"npM3kyo6Xcd2nwTq"}
 {"user":"admin","action":"Deleted user with ID x4fpy1Dcj6BXGBbd","time":"2026-08-24T13:26:19.127Z","_id":"s4asZXGQvnwPfDCy"}
 {"user":"admin","action":"Updated data for user 2110952001","time":"2026-08-24T13:25:41.251Z","_id":"sk12KDzyWhnG2o38"}
 {"user":"admin","action":"Saved Web Config settings","time":"2026-08-24T13:26:46.836Z","_id":"tLU9uD6o7o3uhQqk"}
 {"user":"admin","action":"Updated data for user dewi","time":"2026-08-24T13:25:23.755Z","_id":"wdgM86IK5vzxTGmd"}
+{"user":"admin","action":"Changed voting status to: CLOSED","time":"2026-08-25T07:03:21.566Z","_id":"wgBqNL6TJgpbdXx1"}
 {"user":"admin","action":"Saved Web Config settings","time":"2026-08-24T13:26:55.271Z","_id":"wpK8x4sMrzpNJeE5"}
 {"$$indexCreated":{"fieldName":"time","unique":false,"sparse":false}}
-{"user":"admin","action":"Changed voting status to: CLOSED","time":"2026-08-25T07:03:21.566Z","_id":"wgBqNL6TJgpbdXx1"}
+{"$$indexCreated":{"fieldName":"time"}}

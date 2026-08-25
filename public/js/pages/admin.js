@@ -525,19 +525,41 @@ const initAdminPage = async () => {
 
     const renderStandings = (data) => {
         const container = document.getElementById('standings-container');
-        if (!container || !data.candidates) return;
+        if (!container || !data.candidates || data.candidates.length === 0) {
+            if (container) container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">No candidates data yet.</p>';
+            return;
+        }
 
-        let html = '<table class="pending-table" style="margin:0;"><thead><tr><th>Candidate</th><th>Votes</th><th>%</th></tr></thead><tbody>';
-        data.candidates.forEach(c => {
+        let html = '<div style="display: flex; flex-direction: column; gap: 20px;">';
+        
+        // Sort candidates by percentage
+        const sortedCandidates = [...data.candidates].sort((a, b) => {
+            const pctA = data.voteCounts[a.id]?.percentage || 0;
+            const pctB = data.voteCounts[b.id]?.percentage || 0;
+            return pctB - pctA;
+        });
+
+        sortedCandidates.forEach((c, index) => {
             const count = data.voteCounts[c.id]?.count || 0;
             const pct = data.voteCounts[c.id]?.percentage || 0;
-            html += `<tr>
-                <td><strong>${c.nama}</strong></td>
-                <td>${count}</td>
-                <td><span style="background:var(--primary-light); color:var(--primary-dark); padding:2px 8px; border-radius:12px; font-size:0.75rem;">${pct}%</span></td>
-            </tr>`;
+            
+            // Assign different colors based on rank
+            const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444'];
+            const barColor = colors[index % colors.length];
+
+            html += `
+                <div class="candidate-standing-item">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">
+                        <span style="font-weight: 600; font-size: 1.05rem;">${c.nama}</span>
+                        <span style="font-weight: 700; color: ${barColor}; font-size: 1.1rem;">${pct}% <span style="font-size:0.8rem; font-weight:500; color:var(--text-muted);">(${count} votes)</span></span>
+                    </div>
+                    <div style="background: #e2e8f0; border-radius: 999px; height: 12px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="background: ${barColor}; height: 100%; width: ${pct}%; border-radius: 999px; transition: width 1s ease-out;"></div>
+                    </div>
+                </div>
+            `;
         });
-        html += '</tbody></table>';
+        html += '</div>';
         container.innerHTML = html;
     };
 
@@ -697,6 +719,20 @@ const initAdminPage = async () => {
     loadUserManagement();
     loadWebConfig();
     loadFeedbackList();
+
+    // Hamburger Menu Logic
+    const hamburgerMenu = document.getElementById('hamburger-menu');
+    const navLinks = document.getElementById('nav-links');
+    if (hamburgerMenu && navLinks) {
+        hamburgerMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        navLinks.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+    }
 };
 
 document.addEventListener('DOMContentLoaded', initAdminPage);

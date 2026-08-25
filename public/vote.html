@@ -20,9 +20,12 @@
 
     <nav>
         <div class="container nav-content">
-            <a href="index.html" class="logo"><img src="assets/img/logos.png" alt="Logo"
-                    style="height:30px;width:auto;vertical-align:middle;"> Website Voting</a>
-            <div class="nav-links">
+            <a href="index.html" class="logo"><img src="assets/img/logos.png" id="nav-logo" alt="Logo"
+                    style="height:30px;width:auto;vertical-align:middle;"> <span id="nav-title">CastIt</span></a>
+            <button class="hamburger" id="hamburger-menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links" id="nav-links">
                 <span id="user-greeting" style="font-weight: 500; color: var(--text-dark);"></span>
                 <button class="btn btn-primary" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
@@ -34,7 +37,8 @@
         <!-- PAGE HEADER -->
         <div style="margin-bottom: 40px;">
             <h1 style="margin-bottom: 6px;">Voting Dashboard</h1>
-            <p style="color: var(--text-muted);">Click on a candidate card to view their vision &amp; missions. You can only vote once.</p>
+            <p style="color: var(--text-muted);">Click on a candidate card to view their vision &amp; missions. You can
+                only vote once.</p>
         </div>
 
         <!-- ADMIN ONLY CONTROLS -->
@@ -44,7 +48,8 @@
                 style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
                 <div>
                     <h3 style="margin: 0; font-size: 1.1rem; color: #1e293b;">🛠️ Admin Control Panel</h3>
-                    <p style="margin: 5px 0 0; font-size: 0.85rem; color: #64748b;">Use the button to open/close voting access for all users.</p>
+                    <p style="margin: 5px 0 0; font-size: 0.85rem; color: #64748b;">Use the button to open/close voting
+                        access for all users.</p>
                 </div>
                 <button id="admin-toggle-btn" class="btn"
                     style="min-width: 180px; justify-content: center; font-weight: 600;">
@@ -59,7 +64,8 @@
             <i class="fas fa-check-circle" style="color: var(--primary); font-size: 1.5rem;"></i>
             <div>
                 <strong style="color: var(--primary-dark);">Your Vote Has Been Received!</strong>
-                <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0;">Thank you for participating in this election.</p>
+                <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0;">Thank you for participating in this
+                    election.</p>
             </div>
         </div>
 
@@ -69,7 +75,8 @@
             <i class="fas fa-clock" style="color: #d97706; font-size: 1.5rem;"></i>
             <div>
                 <strong style="color: #92400e;">Voting Is Closed</strong>
-                <p style="font-size: 0.875rem; color: #92400e; margin: 0;">The committee has not opened the voting session yet. Please wait for further announcements.</p>
+                <p style="font-size: 0.875rem; color: #92400e; margin: 0;">The committee has not opened the voting
+                    session yet. Please wait for further announcements.</p>
             </div>
         </div>
 
@@ -81,7 +88,8 @@
 
         <!-- STATS -->
         <h2 style="margin-bottom: 28px; font-size: 1.4rem;">📊 Election Statistics</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; align-items: start;">
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; align-items: start;">
             <!-- LEFT SIDEBAR -->
             <div>
                 <div class="stats-grid" style="margin-bottom: 24px;">
@@ -100,9 +108,11 @@
                 </div>
 
                 <div style="background: white; padding: 20px; border-radius: 16px; box-shadow: var(--shadow);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <span style="font-weight: 600;">Participation Progress</span>
-                        <span id="ui-counter" style="color: var(--text-muted); font-size: 0.875rem;">0 / 0 have voted (0%)</span>
+                        <span id="ui-counter" style="color: var(--text-muted); font-size: 0.875rem;">0 / 0 have voted
+                            (0%)</span>
                     </div>
                     <div class="progress-container">
                         <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
@@ -111,65 +121,70 @@
             </div>
 
             <!-- RIGHT SIDEBAR (CHART) -->
-            <div class="chart-container" style="margin: 0; background: white; padding: 24px; border-radius: 16px; box-shadow: var(--shadow); height: 100%;">
+            <div class="chart-container"
+                style="margin: 0; background: white; padding: 24px; border-radius: 16px; box-shadow: var(--shadow); height: 100%;">
                 <h3 style="text-align: center; margin-bottom: 6px; font-size: 1.1rem;">Live Vote Results</h3>
-                <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Automatically updated</p>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">
+                    Automatically updated</p>
                 <div style="position: relative; height: 250px; width: 100%;">
                     <canvas id="resultsChart"></canvas>
                 </div>
-        </div>
-    </div>
-
-    <!-- FEEDBACK SECTION -->
-    <div class="container" style="padding-bottom: 80px;">
-        <hr style="margin: 20px 0 60px 0; border: none; border-top: 1px solid #e5e7eb;">
-        <h2 style="margin-bottom: 28px; font-size: 1.4rem;">💬 Suggestions & Feedback</h2>
-        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; align-items: start;">
-            <!-- Feedback Form -->
-            <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: var(--shadow);">
-                <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 1.1rem;">Submit Feedback</h3>
-                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Send your suggestions or issues directly to the administration.</p>
-                <form id="feedback-form">
-                    <div class="form-group">
-                        <textarea id="feedback-message" class="form-control" rows="4" placeholder="Type your message here..." required style="resize: vertical;"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fas fa-paper-plane"></i> Send Feedback</button>
-                </form>
             </div>
-            
-            <!-- Feedback List -->
-            <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: var(--shadow);">
-                <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 1.1rem;">My Feedback History</h3>
-                <div id="feedback-list-container" style="max-height: 400px; overflow-y: auto;">
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">Loading feedbacks...</p>
+        </div>
+
+        <!-- FEEDBACK SECTION -->
+        <div class="container" style="padding-bottom: 80px;">
+            <hr style="margin: 20px 0 60px 0; border: none; border-top: 1px solid #e5e7eb;">
+            <h2 style="margin-bottom: 28px; font-size: 1.4rem;">💬 Suggestions & Feedback</h2>
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; align-items: start;">
+                <!-- Feedback Form -->
+                <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: var(--shadow);">
+                    <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 1.1rem;">Submit Feedback</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Send your suggestions
+                        or issues directly to the administration.</p>
+                    <form id="feedback-form">
+                        <div class="form-group">
+                            <textarea id="feedback-message" class="form-control" rows="4"
+                                placeholder="Type your message here..." required style="resize: vertical;"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;"><i
+                                class="fas fa-paper-plane"></i> Send Feedback</button>
+                    </form>
+                </div>
+
+                <!-- Feedback List -->
+                <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: var(--shadow);">
+                    <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 1.1rem;">My Feedback History</h3>
+                    <div id="feedback-list-container" style="max-height: 400px; overflow-y: auto;">
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Loading feedbacks...</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- CANDIDATE MODAL -->
-    <div class="modal" id="candidate-modal">
-        <div class="modal-content">
-            <button class="close-modal" id="close-modal-btn"><i class="fas fa-times"></i></button>
-            <div id="modal-body"></div>
+        <!-- CANDIDATE MODAL -->
+        <div class="modal" id="candidate-modal">
+            <div class="modal-content">
+                <button class="close-modal" id="close-modal-btn"><i class="fas fa-times"></i></button>
+                <div id="modal-body"></div>
+            </div>
         </div>
-    </div>
 
-    <footer>
-        <div class="container">
-            <p style="color: var(--text-muted); font-size: 0.875rem;">&copy; 2026 Organisasi XYZ.</p>
-        </div>
-    </footer>
+        <footer>
+            <div class="container">
+                <p style="color: var(--text-muted); font-size: 0.875rem;">&copy; 2026 Organisasi XYZ.</p>
+            </div>
+        </footer>
 
-    <div id="toast" class="toast"></div>
+        <div id="toast" class="toast"></div>
 
-    <script>
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user) document.getElementById('user-greeting').textContent = `Halo, ${user.fullName} 👋`;
-    </script>
-    <script src="js/utils/darkMode.js"></script>
-    <script src="js/utils/templateSync.js"></script>
-    <script type="module" src="js/pages/vote.js"></script>
+        <script>
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) document.getElementById('user-greeting').textContent = `Halo, ${user.fullName} 👋`;
+        </script>
+        <script src="js/utils/darkMode.js"></script>
+        <script src="js/utils/templateSync.js"></script>
+        <script type="module" src="js/pages/vote.js"></script>
 </body>
 
 </html>

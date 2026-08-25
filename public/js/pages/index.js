@@ -177,6 +177,21 @@ const initLandingPage = () => {
             }
         });
     }
+
+    // Hamburger Menu Logic
+    const hamburgerMenu = document.getElementById('hamburger-menu');
+    const navLinks = document.getElementById('nav-links');
+    if (hamburgerMenu && navLinks) {
+        hamburgerMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+    }
 };
 
 document.addEventListener('DOMContentLoaded', initLandingPage);

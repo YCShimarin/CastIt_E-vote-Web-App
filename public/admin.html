@@ -131,9 +131,12 @@
 <body>
     <nav>
         <div class="container nav-content">
-            <a href="index.html" class="logo"><img src="assets/img/logos.png" alt="Logo"
-                    style="height:30px;width:auto;vertical-align:middle;"> Voting System</a>
-            <div class="nav-links">
+            <a href="index.html" class="logo"><img src="assets/img/logos.png" id="nav-logo" alt="Logo"
+                    style="height:30px;width:auto;vertical-align:middle;"> <span id="nav-title">CastIt</span></a>
+            <button class="hamburger" id="hamburger-menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links" id="nav-links">
                 <span
                     style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;"><i
                         class="fas fa-shield-alt"></i> Admin Panel</span>
@@ -152,41 +155,47 @@
         <div id="section-quick-actions"
             style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 30px;">
             <h2 style="margin-bottom: 16px; font-size: 1.1rem;">⚡ Quick Actions</h2>
-                <div class="quick-actions" style="margin-bottom: 0;">
-                    <button class="btn btn-outline" id="btn-export-excel">
-                        <i class="fas fa-file-excel" style="color: #10b981;"></i> Export Results
-                    </button>
-                    <button class="btn btn-outline" id="btn-export-users">
-                        <i class="fas fa-users" style="color: #3b82f6;"></i> Export Voters
-                    </button>
-                    <button class="btn btn-outline" id="btn-force-sync">
-                        <i class="fas fa-sync" style="color: #f59e0b;"></i> Force Sync
-                    </button>
-                    <button class="btn btn-outline" id="btn-reset-data">
-                        <i class="fas fa-undo-alt" style="color: #3b82f6;"></i> Reset Votes
-                    </button>
-                    <button class="btn btn-outline" id="btn-factory-reset" style="color: #ef4444; border-color: #fecaca;">
-                        <i class="fas fa-skull-crossbones"></i> Factory Reset
-                    </button>
-                </div>
+            <div class="quick-actions" style="margin-bottom: 0;">
+                <button class="btn btn-outline" id="btn-export-excel">
+                    <i class="fas fa-file-excel" style="color: #10b981;"></i> Export Results
+                </button>
+                <button class="btn btn-outline" id="btn-export-users">
+                    <i class="fas fa-users" style="color: #3b82f6;"></i> Export Voters
+                </button>
+                <button class="btn btn-outline" id="btn-force-sync">
+                    <i class="fas fa-sync" style="color: #f59e0b;"></i> Force Sync
+                </button>
+                <button class="btn btn-outline" id="btn-reset-data">
+                    <i class="fas fa-undo-alt" style="color: #3b82f6;"></i> Reset Votes
+                </button>
+                <button class="btn btn-outline" id="btn-factory-reset" style="color: #ef4444; border-color: #fecaca;">
+                    <i class="fas fa-skull-crossbones"></i> Factory Reset
+                </button>
+            </div>
         </div>
 
         <!-- STATUS & STATS -->
         <div id="section-voting-status"
             style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-bottom: 30px;">
-            <div id="section-web-settings" style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
-                <h2 style="margin-bottom: 16px; font-size: 1.1rem;">⚙️ Web Template Settings</h2>
-                <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div id="section-web-settings"
+                style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: center;">
+                <h2 style="margin-bottom: 10px; font-size: 1.1rem;">🟢 Voting Access Control</h2>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px; line-height: 1.4;">Turn on
+                    to allow voters to cast their ballots. Turn off to lock the election system.</p>
+                <div
+                    style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-light); padding: 15px 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
                     <span id="voting-status-label" style="font-weight: 600;"></span>
-                    <button class="toggle-btn off" id="voting-toggle"></button>
+                    <button class="toggle-btn off" id="voting-toggle" style="margin: 0;"></button>
                 </div>
-                <div id="toggle-feedback" style="margin-top: 15px; font-size: 0.8rem; color: var(--text-muted);"></div>
+                <div id="toggle-feedback"
+                    style="margin-top: 15px; font-size: 0.8rem; color: var(--text-muted); text-align: center;"></div>
             </div>
 
-            <div id="section-standings" style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
-                <h2 style="margin-bottom: 20px; font-size: 1.1rem;">📊 Vote Standings</h2>
+            <div id="section-standings"
+                style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
+                <h2 style="margin-bottom: 20px; font-size: 1.1rem;">📊 Live Vote Standings</h2>
                 <div id="standings-container">
-                    <p style="color: var(--text-muted); font-size: 0.875rem;">&copy; 2026 Organization XYZ. All rights reserved.</p>
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">Loading data...</p>
                 </div>
             </div>
         </div>
@@ -209,50 +218,63 @@
         </div>
 
         <!-- WEB CONFIG SECTION (Only for Super Admin) -->
-        <div id="section-web-config" style="display: none; background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 30px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
-                <h2 style="font-size: 1.2rem;">⚙️ Web Template Settings</h2>
+        <div id="section-web-config"
+            style="display: none; background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 30px;">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 15px;">
+                <h2 style="font-size: 1.2rem; margin: 0;">⚙️ Web Template Settings</h2>
+                <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Customize your voting portal's
+                    appearance.</p>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div class="form-group">
-                        <label for="config-web-name">Website Name (Navbar & Footer)</label>
-                        <input type="text" id="config-web-name" class="form-control" placeholder="E.g., Voting System">
-                    </div>
-                    <div class="form-group">
-                        <label for="config-web-title">Hero Title</label>
-                        <input type="text" id="config-web-title" class="form-control" placeholder="E.g., Organization Election">
-                    </div>
-                    <div class="form-group">
-                        <label for="config-web-desc">Hero Description</label>
-                        <textarea id="config-web-desc" class="form-control" rows="2" placeholder="Brief description on landing page..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="config-web-footer">Footer Text</label>
-                        <input type="text" id="config-web-footer" class="form-control" placeholder="E.g., © 2026 Organization XYZ">
-                    </div>
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label for="config-categories">Categories (Comma-separated)</label>
-                        <textarea id="config-categories" class="form-control" rows="2" placeholder="Category A, Category B, Category C"></textarea>
-                    </div>
-                    <button type="button" class="btn btn-primary" id="btn-save-config" style="width: 100%; justify-content: center; grid-column: 1 / -1;">
-                        <i class="fas fa-save"></i> Save Changes
-                    </button>
-                    <p style="margin-top:10px; font-size:0.8rem; color:var(--text-muted); text-align:center; grid-column: 1 / -1;">
-                        * Advanced settings (candidates, logo, etc.) can be edited directly in <code>web_config.json</code>.
-                    </p>
+                <div class="form-group">
+                    <label for="config-web-name">Website Name (Navbar & Footer)</label>
+                    <input type="text" id="config-web-name" class="form-control" placeholder="E.g., Voting System">
+                </div>
+                <div class="form-group">
+                    <label for="config-web-title">Hero Title</label>
+                    <input type="text" id="config-web-title" class="form-control"
+                        placeholder="E.g., Organization Election">
+                </div>
+                <div class="form-group">
+                    <label for="config-web-desc">Hero Description</label>
+                    <textarea id="config-web-desc" class="form-control" rows="2"
+                        placeholder="Brief description on landing page..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="config-web-footer">Footer Text</label>
+                    <input type="text" id="config-web-footer" class="form-control"
+                        placeholder="E.g., © 2026 Organization XYZ">
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label for="config-categories">Categories (Comma-separated)</label>
+                    <textarea id="config-categories" class="form-control" rows="2"
+                        placeholder="Category A, Category B, Category C"></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" id="btn-save-config"
+                    style="width: 100%; justify-content: center; grid-column: 1 / -1;">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <p
+                    style="margin-top:10px; font-size:0.8rem; color:var(--text-muted); text-align:center; grid-column: 1 / -1;">
+                    * Advanced settings (candidates, logo, etc.) can be edited directly in <code>web_config.json</code>.
+                </p>
             </div>
         </div>
 
         <!-- USER MANAGEMENT -->
-        <div id="section-user-management" style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-top: 36px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 24px;">
+        <div id="section-user-management"
+            style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-top: 36px;">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 24px;">
                 <h2 style="margin:0; font-size: 1.2rem;">👥 Manage Users</h2>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="user-search" class="form-control" placeholder="Search name/ID..." style="width: 250px;">
+                    <input type="text" id="user-search" class="form-control" placeholder="Search name/ID..."
+                        style="width: 250px;">
                     <button class="btn btn-primary" id="btn-add-user"><i class="fas fa-plus"></i> Add User</button>
                 </div>
             </div>
-            
+
             <div class="table-responsive">
                 <table class="pending-table" id="users-table">
                     <thead>
@@ -265,17 +287,22 @@
                         </tr>
                     </thead>
                     <tbody id="user-list-container">
-                        <tr><td colspan="5" style="text-align:center; padding: 30px; color: var(--text-muted);">Loading user data...</td></tr>
+                        <tr>
+                            <td colspan="5" style="text-align:center; padding: 30px; color: var(--text-muted);">Loading
+                                user data...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
-            <div id="user-pagination" style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;"></div>
+            <div id="user-pagination" style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+            </div>
         </div>
 
         <!-- TABLES & LOGS -->
         <div id="section-main-table"
             style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 30px; align-items: start; margin-top: 30px;">
-            <div id="section-new-registrant" style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
+            <div id="section-new-registrant"
+                style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
                 <h2 style="font-size: 1.2rem; margin-bottom: 20px;">📋 New Registrant Verification</h2>
                 <div id="pending-table-container">
                     <p style="color: var(--text-muted);">Loading data...</p>
@@ -286,43 +313,49 @@
                 style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h2 style="font-size: 1.2rem; margin: 0;">🛡️ Audit Log</h2>
-                    <button class="btn btn-outline" id="btn-view-all-logs" style="padding: 4px 12px; font-size: 0.8rem;">View All</button>
+                    <button class="btn btn-outline" id="btn-view-all-logs"
+                        style="padding: 4px 12px; font-size: 0.8rem;">View All</button>
                 </div>
-                <div id="audit-log-container"
-                    style="max-height: 400px; overflow-y: auto; border-radius: 12px;">
+                <div id="audit-log-container" style="max-height: 400px; overflow-y: auto; border-radius: 12px;">
                     <p style="padding: 20px; color: var(--text-muted); text-align: center;">No activity yet.</p>
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- FEEDBACK MANAGEMENT -->
+    <div id="section-feedback"
+        style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-top: 36px;">
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 24px;">
+            <h2 style="margin:0; font-size: 1.2rem;">💬 Feedback Management</h2>
+            <button class="btn btn-outline" id="btn-export-feedback"
+                style="border-color: #10b981; color: #10b981; margin: 0;">
+                <i class="fas fa-file-excel"></i> Export to Excel
+            </button>
         </div>
-        
-        <!-- FEEDBACK MANAGEMENT -->
-        <div id="section-feedback" style="background: var(--white); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); margin-top: 36px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 24px;">
-                <h2 style="margin:0; font-size: 1.2rem;">💬 Feedback Management</h2>
-                <button class="btn btn-outline" id="btn-export-feedback" style="border-color: #10b981; color: #10b981; margin: 0;">
-                    <i class="fas fa-file-excel"></i> Export to Excel
-                </button>
-            </div>
-            
-            <div class="table-responsive">
-                <table class="pending-table" id="feedback-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Voter Name</th>
-                            <th>Category</th>
-                            <th>Message</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="feedback-list-container">
-                        <tr><td colspan="6" style="text-align:center; padding: 30px; color: var(--text-muted);">Loading feedback data...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+
+        <div class="table-responsive">
+            <table class="pending-table" id="feedback-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Voter Name</th>
+                        <th>Category</th>
+                        <th>Message</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="feedback-list-container">
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding: 30px; color: var(--text-muted);">Loading
+                            feedback data...</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+    </div>
     </div>
 
     <div id="toast" class="toast"></div>
@@ -332,9 +365,11 @@
         <div class="modal-content" style="max-width: 600px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 style="margin:0; font-size:1.2rem;">🛡️ All Audit Logs</h2>
-                <button class="close-modal" id="close-logs-modal" style="position:static;"><i class="fas fa-times"></i></button>
+                <button class="close-modal" id="close-logs-modal" style="position:static;"><i
+                        class="fas fa-times"></i></button>
             </div>
-            <div id="full-audit-log-container" style="max-height: 60vh; overflow-y: auto; border: 1px solid var(--border-light, #f1f5f9); border-radius: 12px; padding: 10px;">
+            <div id="full-audit-log-container"
+                style="max-height: 60vh; overflow-y: auto; border: 1px solid var(--border-light, #f1f5f9); border-radius: 12px; padding: 10px;">
                 <p style="padding: 20px; color: var(--text-muted); text-align: center;">Loading logs...</p>
             </div>
         </div>
@@ -345,7 +380,8 @@
         <div class="modal-content" style="max-width: 500px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 id="modal-user-title" style="margin:0; font-size:1.2rem;">Add New User</h2>
-                <button class="close-modal" id="close-user-modal" style="position:static;"><i class="fas fa-times"></i></button>
+                <button class="close-modal" id="close-user-modal" style="position:static;"><i
+                        class="fas fa-times"></i></button>
             </div>
             <form id="user-form">
                 <input type="hidden" id="edit-user-id">
@@ -383,7 +419,8 @@
                     <input type="email" id="user-email" class="form-control" placeholder="email@example.com">
                 </div>
                 <div style="margin-top: 20px; display: flex; gap: 10px;">
-                    <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;">Save Data</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;">Save
+                        Data</button>
                 </div>
             </form>
         </div>
@@ -394,20 +431,25 @@
         <div class="modal-content" style="max-width: 500px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 style="margin:0; font-size:1.2rem;">Reply to Feedback</h2>
-                <button class="close-modal" id="close-feedback-modal" style="position:static;"><i class="fas fa-times"></i></button>
+                <button class="close-modal" id="close-feedback-modal" style="position:static;"><i
+                        class="fas fa-times"></i></button>
             </div>
             <div style="background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-                <p id="modal-feedback-voter" style="margin: 0 0 5px 0; font-size: 0.85rem; color: var(--text-muted);"></p>
-                <p id="modal-feedback-message" style="margin: 0; font-size: 0.95rem; color: var(--text-dark); font-weight: 500;"></p>
+                <p id="modal-feedback-voter" style="margin: 0 0 5px 0; font-size: 0.85rem; color: var(--text-muted);">
+                </p>
+                <p id="modal-feedback-message"
+                    style="margin: 0; font-size: 0.95rem; color: var(--text-dark); font-weight: 500;"></p>
             </div>
             <form id="feedback-reply-form">
                 <input type="hidden" id="reply-feedback-id">
                 <div class="form-group">
                     <label>Your Reply</label>
-                    <textarea id="feedback-reply-text" class="form-control" rows="4" placeholder="Type your reply here..." required style="resize: vertical;"></textarea>
+                    <textarea id="feedback-reply-text" class="form-control" rows="4"
+                        placeholder="Type your reply here..." required style="resize: vertical;"></textarea>
                 </div>
                 <div style="margin-top: 20px; display: flex; gap: 10px;">
-                    <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;"><i class="fas fa-paper-plane"></i> Send Reply</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;"><i
+                            class="fas fa-paper-plane"></i> Send Reply</button>
                 </div>
             </form>
         </div>

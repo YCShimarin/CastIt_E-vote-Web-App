@@ -37,7 +37,7 @@ const login = async (req, res) => {
             const now = Date.now();
             // If active in the last 3 minutes, reject
             if (now - activeSession.last_active < 3 * 60 * 1000) {
-                return sendResponse(res, false, 'Akun ini sedang login di perangkat lain', {}, 403);
+                return sendResponse(res, false, 'This account is currently logged in on another device', {}, 403);
             }
             // Otherwise, old session is dead, remove it
             await db.sessions.remove({ username: user.username }, { multi: true });
